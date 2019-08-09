@@ -455,3 +455,103 @@ rule merge_genotyped_vcfs_pre_recal:
                 -I {input.LIST} \
                 -O {output.MERGED_VCF}
         """
+
+rule variant_recalibration:
+    input:
+        CROSS_1_TRUTH_VCF   = DATA + "/sch_man_snp_training_panel/Cross_1.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_truth.vcf",
+        CROSS_1_UNTRUTH_VCF = DATA + "/sch_man_snp_training_panel/Cross_1.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_untruth.vcf",
+        CROSS_2_TRUTH_VCF   = DATA + "/sch_man_snp_training_panel/Cross_2.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_truth.vcf",
+        CROSS_2_UNTRUTH_VCF = DATA + "/sch_man_snp_training_panel/Cross_2.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_untruth.vcf",
+        CROSS_3_TRUTH_VCF   = DATA + "/sch_man_snp_training_panel/Cross_3.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_truth.vcf",
+        CROSS_3_UNTRUTH_VCF = DATA + "/sch_man_snp_training_panel/Cross_3.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_untruth.vcf",
+        CROSS_4_TRUTH_VCF   = DATA + "/sch_man_snp_training_panel/Cross_4.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_truth.vcf",
+        CROSS_4_UNTRUTH_VCF = DATA + "/sch_man_snp_training_panel/Cross_4.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_untruth.vcf",
+        CROSS_1_TRUTH_IDX   = DATA + "/sch_man_snp_training_panel/Cross_1.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_truth.vcf",
+        CROSS_1_UNTRUTH_IDX = DATA + "/sch_man_snp_training_panel/Cross_1.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_untruth.vcf",
+        CROSS_2_TRUTH_IDX   = DATA + "/sch_man_snp_training_panel/Cross_2.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_truth.vcf",
+        CROSS_2_UNTRUTH_IDX = DATA + "/sch_man_snp_training_panel/Cross_2.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_untruth.vcf",
+        CROSS_3_TRUTH_IDX   = DATA + "/sch_man_snp_training_panel/Cross_3.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_truth.vcf",
+        CROSS_3_UNTRUTH_IDX = DATA + "/sch_man_snp_training_panel/Cross_3.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_untruth.vcf",
+        CROSS_4_TRUTH_IDX   = DATA + "/sch_man_snp_training_panel/Cross_4.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_truth.vcf",
+        CROSS_4_UNTRUTH_IDX = DATA + "/sch_man_snp_training_panel/Cross_4.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_untruth.vcf",
+        REFERENCE           = GENOME_FILE,
+        TARGETED_VCF        = RESULTS + "/genotype/cohort_target_regions.vcf",
+        TARGETED_VCF_IDX    = RESULTS + "/genotype/cohort_target_regions.vcf.idx"
+    output:
+        RECAL_VCF = temp( RESULTS + "/variant_filtration/snp_recal.vcf" ),
+        TRANCHES  = RESULTS + "/variant_filtration/snp_recal_tranches.csv",
+        RSCRIPT   = RESULTS + "/variant_filtration/snp_recal_plots.R"
+    threads:
+        12
+    conda:
+        "config/env.yml"
+    log:
+        LOGS + "/final_merge_of_genotyped_vcfs"
+    shell:
+        """
+        bin/gatk-4.1.2.0/gatk VariantRecalibrator \
+            -R {input.REFERENCE} \
+            -V {input.TARGETED_VCF} \
+            --resource:cross1_truth,known=false,training=true,truth=true,prior=10.0 {input.CROSS_1_TRUTH_VCF} \
+            --resource:cross1_untruth,known=false,training=true,truth=false,prior=10.0 {input.CROSS_1_UNTRUTH_VCF}\
+            --resource:cross2_truth,known=false,training=true,truth=true,prior=10.0 {input.CROSS_2_TRUTH_VCF}\
+            --resource:cross2_untruth,known=false,training=true,truth=false,prior=10.0 {input.CROSS_2_UNTRUTH_VCF}\
+            --resource:cross3_truth,known=false,training=true,truth=true,prior=10.0 {input.CROSS_3_TRUTH_VCF}\
+            --resource:cross3_untruth,known=false,training=true,truth=false,prior=10.0 {input.CROSS_3_UNTRUTH_VCF}\
+            --resource:cross4_truth,known=false,training=true,truth=true,prior=10.0 {input.CROSS_4_TRUTH_VCF}\
+            --resource:cross4_untruth,known=false,training=true,truth=false,prior=10.0 {input.CROSS_4_UNTRUTH_VCF}\
+            -an SOR \
+            -an MQ \
+            -an MQRankSum \
+            -an ReadPosRankSum \
+            -mode SNP \
+            -O {output.RECAL_VCF} \
+            --tranches-file {output.TRANCHES} \
+            --rscript-file {output.RSCRIPT} \
+            --truth-sensitivity-tranche 100.0 \
+            --truth-sensitivity-tranche 99.5 \
+            --truth-sensitivity-tranche 99.0 \
+            --truth-sensitivity-tranche 97.5 \
+            --truth-sensitivity-tranche 95.0 \
+            --truth-sensitivity-tranche 90.0
+           """
+
+rule apply_varient_recal_and_filter:
+    input:
+        RECAL_VCF      = RESULTS + "/variant_filtration/snp_recal.vcf",
+        TRANCHES       = RESULTS + "/variant_filtration/snp_recal_tranches.csv",
+        REFERENCE      = GENOME_FILE,
+        TARGET_VCF     = RESULTS + "/genotype/cohort_target_regions.vcf",
+        TARGET_VCF_IDX = RESULTS + "/genotype/cohort_target_regions.vcf.idx"
+    output:
+        SOFT_RECAL_VCF    = RESULTS + "/variant_filtration/snp_recal_soft.vcf",
+        HARD_FILTERED_VCF = temp( RESULTS + "/variant_filtration/snp_recal_hard.vcf" ),
+    params:
+        TRANCHE_LEVEL = "97.5"    
+    threads:
+        12
+    conda:
+        "config/env.yml"
+    log:
+        LOGS + "/apply_varient_recal_and_filter"
+    shell:
+        """
+        bin/gatk-4.1.2.0/gatk ApplyVQSR \
+            -R {input.REFERENCE} \
+            -V {input.TARGET_VCF} \
+            -O {output.SOFT_RECAL_VCF} \
+            --truth-sensitivity-filter-level {params.TRANCHE_LEVEL} \
+            --tranches-file {input.TRANCHES} \
+            --recal-file {input.RECAL_VCF} \
+            -mode SNP
+
+        bin/gatk-4.1.2.0/gatk SelectVariants \
+            -V {output.SOFT_RECAL_VCF} \
+            -select-type SNP \
+            --exclude-filtered \
+            -O {output.HARD_FILTERED_VCF} \
+            -R {input.REFERENCE} \
+        """
+
+
+
