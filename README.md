@@ -47,3 +47,7 @@ jupyter notebook
 Then load the notebook.  From there analyses, should be completed serially.
 
 
+In the notebook make sure all of the relevant info is present:
+- dowloand data from SRA, exomes, and Sanger SMV7
+ 
+
