@@ -1,14 +1,5 @@
-#using snakemake v5.4.0
-#using conda v4.6.2
-
-# snakemake \
-#   --printshellcmds \
-#   --use-conda \
-#   --cluster 'qsub -V -cwd -S /bin/bash -pe smp {threads} -o {log}.log -j y' \
-#   --jobs 900 \
-#   --latency-wait 200 \
-#   --keep-going \
-#   --restart-times 2
+#using snakemake v5.5.4
+#using conda v4.7.11
 
 #set main project dir and work from there
 LOGS='logs'
@@ -16,47 +7,33 @@ RESULTS='results'
 DATA='data'
 BIN='bin'
 GENOME_FILE = DATA + "/genomes/Smansoni_v7.fa"
+
 configfile: "config/config.yml"
 
 localrules: 
     all, 
-    download_and_process_genome,
     create_list_of_contigs,
     prep_gdbimport,
 
-#get sra data
-#fastq-dump --split-files --outdir ./data/sra_data/ --gzip ERX092221 #rodh
-#fastq-dump --split-files --outdir ./data/sra_data/ --gzip ERX284221 #marg
-#fastq-dump --split-files --outdir ./data/sra_data/ --gzip ERX095893 #marg
-# new sample need to update ERR310938 srod
-#
 rule all:
     input:
-        expand(RESULTS + "/haplotype_caller/{id}.hc.vcf", id=config["SAMPLE_IDS"]),
-        expand(RESULTS + "/gdbimport/{contig}", contig=config["CONTIGS"]),
-        expand(RESULTS + "/genotype/{contig}.vcf", contig=config["CONTIGS"]),
         RESULTS + "/genotype/cohort_raw.vcf",
-        RESULTS + "/genotype/cohort_raw.vcf.idx",
-        RESULTS + "/variant_filtration/recal_snps_culled_indv.vcf",
-        RESULTS + "/variant_filtration/schMan_v7_exome_snps_filtered.vcf",
-        RESULTS + "/phasing/schMan_v7_exome_phased.vcf"
+        #RESULTS + "/variant_filtration/recal_snps_culled_indv.vcf",
+        #RESULTS + "/variant_filtration/schMan_v7_exome_snps_filtered.vcf",
+        #RESULTS + "/phasing/schMan_v7_exome_phased.vcf"
 
 rule bwa_index_genome:
     input:
         GENOME = GENOME_FILE
     output:
-        expand( GENOME_FILE + ".{ext}", ext=["pac", "ann", "amb", "bwt", "sa" ]
-#        DATA + "/genomes/Smansoni_v7.fa.ann",
-#        DATA + "/genomes/Smansoni_v7.fa.amb",
-#        DATA + "/genomes/Smansoni_v7.fa.bwt",
-#        DATA + "/genomes/Smansoni_v7.fa.sa",
+        expand( GENOME_FILE + ".{ext}", ext=["pac", "ann", "amb", "bwt", "sa" ])
     log:
         LOGS + "/bwa_index_genome.log"
     conda:
         "config/env.yml"
     shell:
         """
-        bwa index {output.GENOME}
+        bwa index {input.GENOME}
         """
 
 rule seqdict_genome:
@@ -164,11 +141,11 @@ rule filter_sra_reads:
 
 rule bwa_map:
     input:
-        rule.bwa_index_genome.output
+        rules.bwa_index_genome.output,
         FASTQ_FILE = RESULTS + "/filtered_reads/{id}_filtered_{read}.fastq.gz",
-        REFERENCE = GENOME_FILE
+        REFERENCE  = GENOME_FILE
     output:
-        RESULTS + "/mapped_reads/{id}_R1.sai"
+        temp( RESULTS + "/mapped_reads/{id}_{read}.sai" )
     threads:
         12
     log:
@@ -185,52 +162,6 @@ rule bwa_map:
             {input.FASTQ_FILE}
         """
 
-#rule bwa_map_R2:
-#    input:
-#        DATA + "/genomes/Smansoni_v7.fa.pac",
-#        DATA + "/genomes/Smansoni_v7.fa.ann",
-#        DATA + "/genomes/Smansoni_v7.fa.amb",
-#        DATA + "/genomes/Smansoni_v7.fa.bwt",
-#        DATA + "/genomes/Smansoni_v7.fa.sa",
-#        ANNOTATION_GFF = DATA + "/genomes/Sm_v7.0.gff.gz",
-#        PE_R2 = RESULTS + "/filtered_reads/{id}_filtered_R2.fastq.gz",
-#        REFERENCE = DATA + "/genomes/Smansoni_v7.fa"
-#    output:
-#        RESULTS + "/map_reads/{id}_R2.sai"
-#    threads:
-#        12
-#    log:
-#        LOGS + "/bwa_map_R2#{id}"
-#    conda:
-#        "config/env.yml"
-#    shell:
-#        """
-#        bwa aln -n 0.15 -t {threads} -f {output} {input.REFERENCE} {input.PE_R2}
-#        """
-
-#rule bwa_map_RX:
-#    input:
-#        DATA + "/genomes/Smansoni_v7.fa.pac",
-#        DATA + "/genomes/Smansoni_v7.fa.ann",
-#        DATA + "/genomes/Smansoni_v7.fa.amb",
-#        DATA + "/genomes/Smansoni_v7.fa.bwt",
-#        DATA + "/genomes/Smansoni_v7.fa.sa",
-#        ANNOTATION_GFF = DATA + "/genomes/Sm_v7.0.gff.gz",
-#        PE_RX = RESULTS + "/filtered_reads/{id}_filtered_RX.fastq.gz",
-#        REFERENCE = DATA + "/genomes/Smansoni_v7.fa"
-#    output:
-#        RESULTS + "/map_reads/{id}_RX.sai"
-#    threads:
-#        12
-#    log:
-#        LOGS + "/bwa_map_RX#{id}"
-#    conda:
-#        "config/env.yml"
-#    shell:
-#        """
-#        bwa aln -n 0.15 -t {threads} -f {output} {input.REFERENCE} {input.PE_RX}
-#        """
-
 rule bwa_sampe_samse:
     input:
         REFERENCE = GENOME_FILE,
@@ -243,8 +174,8 @@ rule bwa_sampe_samse:
     output:
         PE_BAM = RESULTS + "/mapped_reads/{id}_PE.bam",
         SE_BAM = RESULTS + "/mapped_reads/{id}_SE.bam",
-        FILTERED_PE_BAM = RESULTS + "/mapped_reads/{id}_filtered_PE.bam",
-        FILTERED_SE_BAM = RESULTS + "/mapped_reads/{id}_filtered_SE.bam"
+        FILTERED_PE_BAM = temp( RESULTS + "/mapped_reads/{id}_filtered_PE.bam" ),
+        FILTERED_SE_BAM = temp( RESULTS + "/mapped_reads/{id}_filtered_SE.bam" )
     threads:
         12
     log:
@@ -292,9 +223,9 @@ rule sort_merge_bam:
         FILTERED_PE_BAM = RESULTS + "/mapped_reads/{id}_filtered_PE.bam",
         FILTERED_SE_BAM = RESULTS + "/mapped_reads/{id}_filtered_SE.bam"
     output:
-        PE_BAM_SORTED = RESULTS + "/mapped_reads/{id}_sorted_PE.bam",
-        SE_BAM_SORTED = RESULTS + "/mapped_reads/{id}_sorted_SE.bam",
-        MERGED_BAM    = RESULTS + "/mapped_reads/{id}_merged.bam"
+        PE_BAM_SORTED = temp( RESULTS + "/mapped_reads/{id}_sorted_PE.bam" ),
+        SE_BAM_SORTED = temp( RESULTS + "/mapped_reads/{id}_sorted_SE.bam" ),
+        MERGED_BAM    = temp( RESULTS + "/mapped_reads/{id}_merged.bam"    )
     threads:
         12
     log:
@@ -316,7 +247,7 @@ rule add_readgroups_to_bam:
     input:
         MERGED_BAM = RESULTS + "/mapped_reads/{id}_merged.bam"
     output:
-        RG_BAM = RESULTS + "/mapped_reads/{id}_rg.bam",
+        RG_BAM = temp(RESULTS + "/mapped_reads/{id}_rg.bam"),
     threads:
         12
     log:
@@ -339,7 +270,7 @@ rule sort_bam_post_readgroup:
     input:
         RG_BAM = RESULTS + "/mapped_reads/{id}_rg.bam",
     output:
-        RG_SORTED_BAM = RESULTS + "/mapped_reads/{id}_rg_sorted.bam"
+        RG_SORTED_BAM = temp( RESULTS + "/mapped_reads/{id}_rg_sorted.bam" )
     threads:
         12
     log:
@@ -355,7 +286,7 @@ rule mark_duplicates_in_bam:
     input:
         RG_SORTED_BAM = RESULTS + "/mapped_reads/{id}_rg_sorted.bam",
     output:
-        METRICS = RESULTS + "/mapped_reads/{id}_dupmetrics.log",
+        METRICS = temp( RESULTS + "/mapped_reads/{id}_dupmetrics.log" ),
         BAM     = RESULTS + "/mapped_reads/{id}_processed.bam"
     threads:
         12
@@ -395,30 +326,30 @@ rule index_bam:
 # Create list of contigs for Sman genome. this will be used frequently for gatk
 rule create_list_of_contigs:
     input: 
-        DATA + "/genomes/Smansoni_v7.fa.fai"
+        GENOME_FILE + ".fai"
     output:
-        RESULTS + "/lists/contigs.list",
+        temp( RESULTS + "/lists/contigs.list" ),
     threads:
         1
     log:
         LOGS + "/create_list_of_contigs.log"
     shell:
         """
-        awk '{{print "results/genotype/"$1".vcf"}}' {input} >{output}
+        awk '{{print "results/genotype/"$0".vcf"}}' {input} >{output}
         """
 
 #### initial SNPs with haplotype caller
 rule haplotype_caller:
     input: 
         DATA + "/genomes/Smansoni_v7.dict",
-        DATA + "/genomes/Smansoni_v7.fa.fai",
+        GENOME_FILE + ".fai",
         RESULTS + "/mapped_reads/{id}_processed.bam.bai",
-        BAM = RESULTS + "/mapped_reads/{id}_processed.bam",
-        REFERENCE = DATA + "/genomes/Smansoni_v7.fa",
-        TARGET_REGIONS = DATA + "/baited_regions/renamed-sma_agilent_baits.v7.0.chr_reorderd.bed",
+        BAM            = RESULTS + "/mapped_reads/{id}_processed.bam",
+        REFERENCE      = GENOME_FILE,
+        TARGET_REGIONS = DATA + "/renamed-sma_agilent_baits.v7.0.chr_reorderd.bed",
     output:
-        VCF = RESULTS + "/haplotype_caller/{id}.hc.vcf",
-        VCF_IDX = RESULTS + "/haplotype_caller/{id}.hc.vcf.idx"
+        VCF     = temp( RESULTS + "/haplotype_caller/{id}.hc.vcf"     ),
+        VCF_IDX = temp( RESULTS + "/haplotype_caller/{id}.hc.vcf.idx" )
     threads:
         12
     log:
@@ -436,71 +367,91 @@ rule haplotype_caller:
         """
 
 ####make a list of contigs and the gdb parent directory
-#rule prep_gdbimport:
-#    input:
-#        VCF_FILES = expand(RESULTS + "/haplotype_caller/{id}.hc.vcf", id=config["SAMPLE_IDS"]),
-#        VCF_IDXS = expand(RESULTS + "/haplotype_caller/{id}.hc.vcf.idx", id=config["SAMPLE_IDS"]) 
-#    output:
-#        LIST = RESULTS + "/lists/hc.list",
-#        DB = temp(RESULTS + "/gdbimport/tmp")
-#    threads:
-#        1
-#    conda:
-#        "config/env.yml"
-#    log:
-#        LOGS + "/prep_gdbimport_r1.log"
-#    shell:
-#        """
-#        ls {input.VCF_FILES} >{output.LIST}
-#        touch {output.DB}
-#        """
+rule prep_gdbimport:
+    input:
+        VCF_FILES = expand( RESULTS + "/haplotype_caller/{id}.hc.vcf",     id=config["SAMPLE_IDS"] ),
+        VCF_IDXS  = expand( RESULTS + "/haplotype_caller/{id}.hc.vcf.idx", id=config["SAMPLE_IDS"] ) 
+    output:
+        LIST = temp( RESULTS + "/lists/hc.list" ),
+        DB   = temp( RESULTS + "/gdbimport/tmp" )
+    threads:
+        1
+    conda:
+        "config/env.yml"
+    log:
+        LOGS + "/prep_gdbimport_r1.log"
+    shell:
+        """
+        ls {input.VCF_FILES} >{output.LIST}
+        touch {output.DB}
+        """
 
 ###gdbimport
-#rule gdbimport:
-#    input:
-#        HC_VCF_LIST = RESULTS + "/lists/hc.list",
-#        VCF_FILES = expand(RESULTS + "/haplotype_caller/{id}.hc.vcf", id=config["SAMPLE_IDS"]),
-#        VCF_IDXS = expand(RESULTS + "/haplotype_caller/{id}.hc.vcf.idx", id=config["SAMPLE_IDS"]) 
-#    output:
-#        DB = directory(RESULTS + "/gdbimport/{contigs}")
-#    threads:
-#        12
-#    conda:
-#        "config/env.yml"
-#    log:
-#        LOGS + "/gdimport#{contigs}"
-#    shell:
-#        """
-#        bin/gatk-4.1.2.0/gatk --java-options \"-Xmx4g -Xms4g\" GenomicsDBImport \
-#                -V {input.HC_VCF_LIST} \
-#                --genomicsdb-workspace-path {output.DB} \
-#                -L {wildcards.contigs} \
-#                --reader-threads {threads} \
-#                --batch-size 12
-#        """
+rule gdbimport:
+    input:
+        HC_VCF_LIST = RESULTS + "/lists/hc.list",
+        VCF_FILES   = expand(RESULTS + "/haplotype_caller/{id}.hc.vcf", id=config["SAMPLE_IDS"]),
+        VCF_IDXS    = expand(RESULTS + "/haplotype_caller/{id}.hc.vcf.idx", id=config["SAMPLE_IDS"]) 
+    output:
+        DB = temp( directory( RESULTS + "/gdbimport/{contigs}" ))
+    threads:
+        12
+    conda:
+        "config/env.yml"
+    log:
+        LOGS + "/gdimport#{contigs}"
+    shell:
+        """
+        bin/gatk-4.1.2.0/gatk --java-options \"-Xmx4g -Xms4g\" GenomicsDBImport \
+                -V {input.HC_VCF_LIST} \
+                --genomicsdb-workspace-path {output.DB} \
+                -L {wildcards.contigs} \
+                --reader-threads {threads} \
+                --batch-size 12
+        """
 
 ###genotype each contg
-#rule genotype:
-#    input:
-#        REFERENCE = DATA + "/genomes/Smansoni_v7.fa",
-#        DB = RESULTS + "/gdbimport/{contigs}"
-#    output:
-#        VCF = RESULTS + "/genotype/{contigs}.vcf",
-#        IDX = RESULTS + "/genotype/{contigs}.vcf.idx"
-#    threads:
-#        4
-#    conda:
-#        "config/env.yml"
-#    log:
-#        LOGS + "/genotype#{contigs}"
-#    shell:
-#        """
-#        bin/gatk-4.1.2.0/gatk GenotypeGVCFs \
-#                -R {input.REFERENCE} \
-#                -V gendb://{input.DB} \
-#                -new-qual \
-#                -O {output.VCF}
-#        """
+rule genotype:
+    input:
+        REFERENCE = GENOME_FILE,
+        DB = RESULTS + "/gdbimport/{contigs}"
+    output:
+        VCF = temp( RESULTS + "/genotype/{contigs}.vcf"     ),
+        IDX = temp( RESULTS + "/genotype/{contigs}.vcf.idx" )
+    threads:
+        4
+    conda:
+        "config/env.yml"
+    log:
+        LOGS + "/genotype#{contigs}"
+    shell:
+        """
+        bin/gatk-4.1.2.0/gatk GenotypeGVCFs \
+                -R {input.REFERENCE} \
+                -V gendb://{input.DB} \
+                -new-qual \
+                -O {output.VCF}
+        """
 
-
-
+rule merge_genotyped_vcfs_pre_recal:
+    input:
+        LIST = RESULTS + "/lists/contigs.list",
+        VCFS = expand( RESULTS + "/genotype/{contig}.vcf",     contig=config["CONTIGS"]),
+        IDXS = expand( RESULTS + "/genotype/{contig}.vcf.idx", contig=config["CONTIGS"]),
+    output:
+        MERGED_VCF = RESULTS + "/genotype/cohort_raw.vcf",
+        MERGED_IDX = RESULTS + "/genotype/cohort_raw.vcf.idx",
+    threads:
+        12
+    conda:
+        "config/env.yml"
+    log:
+        LOGS + "/merge_genotyped_vcfs_pre_recal"
+    shell:
+        """
+        bin/gatk-4.1.2.0/gatk --java-options "-Xmx4g" \
+            MergeVcfs \
+                --MAX_RECORDS_IN_RAM 500000 \
+                -I {input.LIST} \
+                -O {output.MERGED_VCF}
+        """
