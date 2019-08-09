@@ -1,0 +1,8 @@
+.ipynb_checkpoints/
+.snakemake/
+bin/
+config/gatkcondaenv.yml
+data/exomes/
+data/genomes/
+data/sra/
+sandbox/
