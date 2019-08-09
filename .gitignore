@@ -6,3 +6,4 @@ data/exomes/
 data/genomes/
 data/sra/
 sandbox/
+logs/*
