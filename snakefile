@@ -174,8 +174,6 @@ rule bwa_sampe_samse:
     output:
         PE_BAM = RESULTS + "/mapped_reads/{id}_PE.bam",
         SE_BAM = RESULTS + "/mapped_reads/{id}_SE.bam",
-        FILTERED_PE_BAM = temp( RESULTS + "/mapped_reads/{id}_filtered_PE.bam" ),
-        FILTERED_SE_BAM = temp( RESULTS + "/mapped_reads/{id}_filtered_SE.bam" )
     threads:
         12
     log:
@@ -195,12 +193,6 @@ rule bwa_sampe_samse:
                 - \
                 >{output.PE_BAM}
 
-        samtools view \
-                -Sb \
-                -F 4 \
-                {output.PE_BAM} \
-                >{output.FILTERED_PE_BAM}
-
         bwa samse \
             {input.REFERENCE} \
             {input.SAI_RX} \
@@ -210,18 +202,12 @@ rule bwa_sampe_samse:
                 -F 4 \
                 - \
                 >{output.SE_BAM}
-
-         samtools view \
-            -Sb \
-            -F 4 \
-            {output.SE_BAM} \
-            >{output.FILTERED_SE_BAM}
         """
 
 rule sort_merge_bam:
     input:
-        FILTERED_PE_BAM = RESULTS + "/mapped_reads/{id}_filtered_PE.bam",
-        FILTERED_SE_BAM = RESULTS + "/mapped_reads/{id}_filtered_SE.bam"
+        PE_BAM = RESULTS + "/mapped_reads/{id}_PE.bam",
+        SE_BAM = RESULTS + "/mapped_reads/{id}_SE.bam"
     output:
         PE_BAM_SORTED = temp( RESULTS + "/mapped_reads/{id}_sorted_PE.bam" ),
         SE_BAM_SORTED = temp( RESULTS + "/mapped_reads/{id}_sorted_SE.bam" ),
@@ -234,8 +220,8 @@ rule sort_merge_bam:
         "config/env.yml"
     shell:
       """
-        samtools sort -o {output.SE_BAM_SORTED} {input.FILTERED_SE_BAM}
-        samtools sort -o {output.PE_BAM_SORTED} {input.FILTERED_PE_BAM}
+        samtools sort -o {output.SE_BAM_SORTED} {input.SE_BAM}
+        samtools sort -o {output.PE_BAM_SORTED} {input.PE_BAM}
             
         samtools merge \
             {output.MERGED_BAM} \
