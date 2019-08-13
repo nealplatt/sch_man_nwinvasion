@@ -199,7 +199,6 @@ rule bwa_sampe_samse:
             {input.SE_RX} \
             | samtools view \
                 -Sb \
-                -F 4 \
                 - \
                 >{output.SE_BAM}
         """
@@ -349,7 +348,7 @@ rule haplotype_caller:
             --output {output.VCF} \
             -reference {input.REFERENCE} \
             -L {input.TARGET_REGIONS} \
-            --emit-ref-confidence GVCF
+            --emit-ref-confidence BP_RESOLUTION
         """
 
 ####make a list of contigs and the gdb parent directory
