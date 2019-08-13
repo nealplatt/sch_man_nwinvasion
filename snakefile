@@ -30,7 +30,7 @@ rule bwa_index_genome:
     log:
         LOGS + "/bwa_index_genome.log"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-pipeline-env.yml"
     shell:
         """
         bwa index {input.GENOME}
@@ -46,7 +46,7 @@ rule seqdict_genome:
     log:
         LOGS + "/seqdict_genome"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-gatk4-env.yml"
     shell:
         """
         bin/gatk-4.1.2.0/gatk CreateSequenceDictionary -R {input}
@@ -61,7 +61,7 @@ rule faidx_genome:
     log:
         LOGS + "/faidx_genome"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-pipeline-env.yml"
     shell:
         """
         samtools faidx {input.GENOME}
@@ -82,7 +82,7 @@ rule filter_exome_reads:
     log:
         LOGS + "/filter_exome_reads#{id}"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-pipeline-env.yml"
     shell:
         """
         trimmomatic \
@@ -118,7 +118,7 @@ rule filter_sra_reads:
     log:
         LOGS + "/filter_sra_reads#{id}"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-pipeline-env.yml"
     shell:
         """
         trimmomatic \
@@ -151,7 +151,7 @@ rule bwa_map:
     log:
         LOGS + "/bwa_map_{read}#{id}"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-pipeline-env.yml"
     shell:
         """
         bwa aln \
@@ -179,7 +179,7 @@ rule bwa_sampe_samse:
     log:
         LOGS + "/bwa_sampe_samse#{id}"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-pipeline-env.yml"
     shell:
         """
         bwa sampe \
@@ -217,7 +217,7 @@ rule sort_merge_bam:
     log:
         LOGS + "/sort_merge_bam#{id}"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-pipeline-env.yml"
     shell:
       """
         samtools sort -o {output.SE_BAM_SORTED} {input.SE_BAM}
@@ -239,7 +239,7 @@ rule add_readgroups_to_bam:
     log:
         LOGS + "/add_readgroups_to_bam#{id}"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-gatk4-env.yml"
     shell:
         """
         bin/gatk-4.1.2.0/gatk --java-options \"-Xmx4g -Xms4g\" AddOrReplaceReadGroups \
@@ -262,7 +262,7 @@ rule sort_bam_post_readgroup:
     log:
         LOGS + "/sort_bam_post_readgroup#{id}"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-pipeline-env.yml"
     shell:
         """
         samtools sort -o {output.RG_SORTED_BAM} {input.RG_BAM}
@@ -279,7 +279,7 @@ rule mark_duplicates_in_bam:
     log:
         LOGS + "/mark_duplicates_in_bam#{id}"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-gatk4-env.yml"
     shell:
         """
         bin/gatk-4.1.2.0/gatk --java-options \"-Xmx4g -Xms4g\" MarkDuplicates \
@@ -300,7 +300,7 @@ rule index_bam:
     log:
         LOGS + "/index_bam#{id}"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-pipeline-env.yml"
     shell:
       """
         samtools index {input.BAM}
@@ -341,7 +341,7 @@ rule haplotype_caller:
     log:
         LOGS + "/haplotype_caller#{id}"
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-gatk4-env.yml"
     shell:
         """
         bin/gatk-4.1.2.0/gatk HaplotypeCaller \
@@ -363,7 +363,7 @@ rule prep_gdbimport:
     threads:
         1
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-pipeline-env.yml"
     log:
         LOGS + "/prep_gdbimport_r1.log"
     shell:
@@ -383,7 +383,7 @@ rule gdbimport:
     threads:
         12
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-gatk4-env.yml"
     log:
         LOGS + "/gdimport#{contigs}"
     shell:
@@ -407,7 +407,7 @@ rule genotype:
     threads:
         4
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-gatk4-env.yml"
     log:
         LOGS + "/genotype#{contigs}"
     shell:
@@ -430,7 +430,7 @@ rule merge_genotyped_vcfs_pre_recal:
     threads:
         12
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-gatk4-env.yml"
     log:
         LOGS + "/merge_genotyped_vcfs_pre_recal"
     shell:
@@ -470,7 +470,7 @@ rule variant_recalibration:
     threads:
         12
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-gatk4-env.yml"
     log:
         LOGS + "/final_merge_of_genotyped_vcfs"
     shell:
@@ -517,7 +517,7 @@ rule apply_varient_recal_and_filter:
     threads:
         12
     conda:
-        "config/env.yml"
+        "config/sch_man_nwinvasion-gatk4-env.yml"
     log:
         LOGS + "/apply_varient_recal_and_filter"
     shell:
