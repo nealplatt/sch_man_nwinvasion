@@ -190,6 +190,7 @@ rule bwa_sampe_samse:
             {input.PE_R2} \
             |samtools view \
                 -Sb \
+                -F 4 \
                 - \
                 >{output.PE_BAM}
 
@@ -199,6 +200,7 @@ rule bwa_sampe_samse:
             {input.SE_RX} \
             | samtools view \
                 -Sb \
+                -F 4 \
                 - \
                 >{output.SE_BAM}
         """
@@ -241,7 +243,7 @@ rule add_readgroups_to_bam:
         "config/sch_man_nwinvasion-gatk4-env.yml"
     shell:
         """
-        bin/gatk-4.1.2.0/gatk --java-options \"-Xmx4g -Xms4g\" AddOrReplaceReadGroups \
+        bin/gatk-4.1.2.0/gatk --java-options \"-Xmx3g -Xms3g\" AddOrReplaceReadGroups \
             --INPUT={input.MERGED_BAM} \
             --OUTPUT={output.RG_BAM} \
             --RGPU=unk \
@@ -281,7 +283,7 @@ rule mark_duplicates_in_bam:
         "config/sch_man_nwinvasion-gatk4-env.yml"
     shell:
         """
-        bin/gatk-4.1.2.0/gatk --java-options \"-Xmx4g -Xms4g\" MarkDuplicates \
+        bin/gatk-4.1.2.0/gatk --java-options \"-Xmx3g -Xms3g\" MarkDuplicates \
             --INPUT {input.RG_SORTED_BAM} \
             --OUTPUT {output.BAM} \
             --METRICS_FILE {output.METRICS} \
@@ -387,7 +389,7 @@ rule gdbimport:
         LOGS + "/gdimport#{contigs}"
     shell:
         """
-        bin/gatk-4.1.2.0/gatk --java-options \"-Xmx4g -Xms4g\" GenomicsDBImport \
+        bin/gatk-4.1.2.0/gatk --java-options \"-Xmx3g -Xms3g\" GenomicsDBImport \
                 -V {input.HC_VCF_LIST} \
                 --genomicsdb-workspace-path {output.DB} \
                 -L {wildcards.contigs} \
@@ -434,7 +436,7 @@ rule merge_genotyped_vcfs_pre_recal:
         LOGS + "/merge_genotyped_vcfs_pre_recal"
     shell:
         """
-        bin/gatk-4.1.2.0/gatk --java-options "-Xmx4g" \
+        bin/gatk-4.1.2.0/gatk --java-options "-Xmx3g" \
             MergeVcfs \
                 --MAX_RECORDS_IN_RAM 500000 \
                 -I {input.LIST} \
