@@ -1,51 +1,76 @@
-# Conda environment for GATK Python Tools
-#
 name: sch_man_nwinvasion-gatk4
 channels:
-- defaults
+  - anaconda
+  - cyclus
+  - bioconda
+  - conda-forge
+  - defaults
 dependencies:
-- certifi=2016.2.28=py36_0
-- intel-openmp=2018.0.0
-- mkl=2018.0.1
-- mkl-service=1.1.2
-- defaults::numpy==1.13.3
-- openssl=1.0.2l=0
-- pip=9.0.1=py36_1
-- python=3.6.2=0
-- readline=6.2=2
-- setuptools=36.4.0=py36_1
-- sqlite=3.13.0=0
-- anaconda::tensorflow=1.12.0=mkl_py36h69b6ba0_0
-- tk=8.5.18=0
-- wheel=0.29.0=py36_0
-- xz=5.2.3=0
-- zlib=1.2.11=0
-- pip:
-  - biopython==1.70
-  - bleach==1.5.0
-  - cycler==0.10.0
-  - enum34==1.1.6
-  - h5py==2.7.1
-  - html5lib==0.9999999
-  - joblib==0.11
-  - keras==2.2.0
-  - markdown==2.6.9
-  - matplotlib==2.1.0
-  - pandas==0.21.0
-  - patsy==0.4.1
-  - protobuf==3.6.1
-  - pymc3==3.1
-  - pyparsing==2.2.0
-  - pysam==0.13
-  - python-dateutil==2.6.1
-  - pytz==2017.3
-  - pyvcf==0.6.8
-  - pyyaml==3.12
-  - scikit-learn==0.19.1
-  - scipy==1.0.0
-  - six==1.11.0
-  - theano==1.0.4
-  - tqdm==4.19.4
-  - werkzeug==0.12.2
-  - /master/nplatt/sch_man_nwinvasion/bin/gatk-4.1.2.0/gatkPythonPackageArchive.zip
+  - _libgcc_mutex=0.1=main
+  - _tflow_select=2.3.0=mkl
+  - absl-py=0.7.1=py36_0
+  - astor=0.8.0=py36_0
+  - blas=1.0=mkl
+  - ca-certificates=2019.6.16=hecc5488_0
+  - certifi=2019.6.16=py36_1
+  - gast=0.2.2=py36_0
+  - grpcio=1.12.1=py36hdbcaa40_0
+  - hdf5=1.10.4=hb1b8bf9_0
+  - intel-openmp=2018.0.0=8
+  - java-jdk=8.45.14=0
+  - libblas=3.8.0=7_h6e990d7_netlib
+  - libcblas=3.8.0=7_h6e990d7_netlib
+  - libgcc-ng=9.1.0=hdf63c60_0
+  - libgfortran-ng=7.3.0=hdf63c60_0
+  - liblapack=3.8.0=7_h6e990d7_netlib
+  - libprotobuf=3.8.0=hd408876_0
+  - libstdcxx-ng=9.1.0=hdf63c60_0
+  - mkl=2018.0.1=h19d6760_4
+  - mkl-service=1.1.2=py36h651fb7a_4
+  - ncurses=5.9=10
+  - numpy=1.17.0=py36h95a1406_0
+  - openssl=1.0.2r=h14c3975_0
+  - pip=9.0.1=py36_1
+  - python=3.6.2=0
+  - readline=6.2=2
+  - scipy=1.0.0=py36hbf646e7_0
+  - sqlite=3.13.0=0
+  - tensorboard=1.12.2=py36he6710b0_0
+  - tensorflow=1.12.0=mkl_py36h69b6ba0_0
+  - tensorflow-base=1.12.0=mkl_py36h3c3e929_0
+  - termcolor=1.1.0=py36_1
+  - tk=8.5.18=0
+  - wheel=0.29.0=py36_0
+  - xz=5.2.3=0
+  - zlib=1.2.11=0
+  - pip:
+    - biopython==1.70
+    - bleach==1.5.0
+    - cycler==0.10.0
+    - enum34==1.1.6
+    - h5py==2.7.1
+    - html5lib==0.9999999
+    - joblib==0.11
+    - keras==2.2.0
+    - keras-applications==1.0.2
+    - keras-preprocessing==1.0.1
+    - markdown==2.6.9
+    - matplotlib==2.1.0
+    - pandas==0.21.0
+    - patsy==0.4.1
+    - protobuf==3.6.1
+    - pymc3==3.1
+    - pyparsing==2.2.0
+    - pysam==0.13
+    - python-dateutil==2.6.1
+    - pytz==2017.3
+    - pyvcf==0.6.8
+    - pyyaml==3.12
+    - scikit-learn==0.19.1
+    - setuptools==41.1.0
+    - six==1.11.0
+    - theano==1.0.4
+    - tqdm==4.19.4
+    - werkzeug==0.12.2
+prefix: /master/nplatt/anaconda3/envs/sch_man_nwinvasion-gatk4
 

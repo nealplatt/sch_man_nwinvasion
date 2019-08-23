@@ -19,6 +19,7 @@ rule all:
     input:
         expand(RESULTS + "/filtered_reads/{id}_filtered_{read}.fastq.gz", id=config["SAMPLE_IDS"], read=["R1", "R2", "RX"] ),
         RESULTS + "/genotype/cohort_raw.vcf",
+        RESULTS + "/variant_filtration/snp_recal_hard.vcf",
         #RESULTS + "/variant_filtration/recal_snps_culled_indv.vcf",
         #RESULTS + "/variant_filtration/schMan_v7_exome_snps_filtered.vcf",
         #RESULTS + "/phasing/schMan_v7_exome_phased.vcf"
@@ -323,7 +324,7 @@ rule create_list_of_contigs:
         LOGS + "/create_list_of_contigs.log"
     shell:
         """
-        awk '{{print "results/genotype/"$0".vcf"}}' {input} >{output}
+        awk '{{print "results/genotype/"$1".vcf"}}' {input} >{output}
         """
 
 #### initial SNPs with haplotype caller
@@ -437,7 +438,7 @@ rule merge_genotyped_vcfs_pre_recal:
         LOGS + "/merge_genotyped_vcfs_pre_recal"
     shell:
         """
-        bin/gatk-4.1.2.0/gatk --java-options "-Xmx2g" \
+        bin/gatk-4.1.2.0/gatk --java-options "-Xmx4g" \
             MergeVcfs \
                 --MAX_RECORDS_IN_RAM 500000 \
                 -I {input.LIST} \
@@ -463,8 +464,8 @@ rule variant_recalibration:
         CROSS_4_TRUTH_IDX   = DATA + "/sch_man_snp_training_panel/Cross_4.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_truth.vcf",
         CROSS_4_UNTRUTH_IDX = DATA + "/sch_man_snp_training_panel/Cross_4.ugtpr.snps_indels.raw.wi-baits.nuc.flt-wo_indls-dp20.MI_var_untruth.vcf",
         REFERENCE           = GENOME_FILE,
-        TARGETED_VCF        = RESULTS + "/genotype/cohort_target_regions.vcf",
-        TARGETED_VCF_IDX    = RESULTS + "/genotype/cohort_target_regions.vcf.idx"
+        TARGETED_VCF        = RESULTS + "/genotype/cohort_raw.vcf",
+        TARGETED_VCF_IDX    = RESULTS + "/genotype/cohort_raw.vcf.idx"
     output:
         RECAL_VCF = temp( RESULTS + "/variant_filtration/snp_recal.vcf" ),
         TRANCHES  = RESULTS + "/variant_filtration/snp_recal_tranches.csv",
