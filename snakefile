@@ -17,12 +17,10 @@ localrules:
 
 rule all:
     input:
-        expand(RESULTS + "/filtered_reads/{id}_filtered_{read}.fastq.gz", id=config["SAMPLE_IDS"], read=["R1", "R2", "RX"] ),
+        #expand(RESULTS + "/filtered_reads/{id}_filtered_{read}.fastq.gz", id=config["SAMPLE_IDS"], read=["R1", "R2", "RX"] ),
         RESULTS + "/genotype/cohort_raw.vcf",
-        RESULTS + "/variant_filtration/snp_recal_hard.vcf",
-        #RESULTS + "/variant_filtration/recal_snps_culled_indv.vcf",
-        #RESULTS + "/variant_filtration/schMan_v7_exome_snps_filtered.vcf",
-        #RESULTS + "/phasing/schMan_v7_exome_phased.vcf"
+        FILTERED_VCF = RESULTS + "/variant_filtration/hard_filtered.vcf",
+
 
 rule bwa_index_genome:
     input:
@@ -505,16 +503,18 @@ rule variant_recalibration:
             --truth-sensitivity-tranche 90.0
            """
 
-rule apply_varient_recal_and_filter:
+rule apply_variant_recal_and_filter:
     input:
-        RECAL_VCF      = RESULTS + "/variant_filtration/snp_recal.vcf",
-        TRANCHES       = RESULTS + "/variant_filtration/snp_recal_tranches.csv",
-        REFERENCE      = GENOME_FILE,
-        TARGET_VCF     = RESULTS + "/genotype/cohort_target_regions.vcf",
-        TARGET_VCF_IDX = RESULTS + "/genotype/cohort_target_regions.vcf.idx"
+        RECAL_VCF       = RESULTS + "/variant_filtration/snp_recal.vcf",
+        TRANCHES        = RESULTS + "/variant_filtration/snp_recal_tranches.csv",
+        REFERENCE       = GENOME_FILE,
+        TARGET_VCF      = RESULTS + "/genotype/cohort_raw.vcf",
+        TARGET_VCF_IDX  = RESULTS + "/genotype/cohort_raw.vcf.idx"
     output:
-        SOFT_RECAL_VCF    = RESULTS + "/variant_filtration/snp_recal_soft.vcf",
-        HARD_FILTERED_VCF = temp( RESULTS + "/variant_filtration/snp_recal_hard.vcf" ),
+        APPLIED_VCF  = RESULTS + "/variant_filtration/var_recal.vcf",
+        APPLIED_IDX  = RESULTS + "/variant_filtration/var_recal.vcf.idx",
+        FILTERED_VCF = RESULTS + "/variant_filtration/hard_filtered.vcf",
+        FILTERED_IDX = RESULTS + "/variant_filtration/hard_filtered.vcf.idx",
     params:
         TRANCHE_LEVEL = "97.5"    
     threads:
@@ -522,25 +522,60 @@ rule apply_varient_recal_and_filter:
     conda:
         "config/sch_man_nwinvasion-gatk4-env.yml"
     log:
-        LOGS + "/apply_varient_recal_and_filter"
+        LOGS + "/apply_variant_recal_and_filter"
     shell:
         """
         bin/gatk-4.1.2.0/gatk ApplyVQSR \
             -R {input.REFERENCE} \
             -V {input.TARGET_VCF} \
-            -O {output.SOFT_RECAL_VCF} \
+            -O {output.APPLIED_VCF} \
             --truth-sensitivity-filter-level {params.TRANCHE_LEVEL} \
             --tranches-file {input.TRANCHES} \
             --recal-file {input.RECAL_VCF} \
             -mode SNP
 
         bin/gatk-4.1.2.0/gatk SelectVariants \
-            -V {output.SOFT_RECAL_VCF} \
+            -V {output.APPLIED_VCF} \
             -select-type SNP \
             --exclude-filtered \
-            -O {output.HARD_FILTERED_VCF} \
+            -O {output.FILTERED_VCF} \
             -R {input.REFERENCE} \
         """
 
+###rule ld_filtering_from_phased_maf:
+###    input:
+###        MAF_FILTERED_VCF = RESULTS + "/maf_ld_filtering/cohort_SMV7_phased_maf.vcf"
+###    output:
+###        LD_FILTERED_LIST = RESULTS + "/maf_ld_filtering/cohort_LD_snps.prune.out",
+###        LD_FILTERED_VCF = RESULTS + "/maf_ld_filtering/cohort_LD_snps.vcf",
+###        NO_SEX = temp(RESULTS + "/maf_ld_filtering/cohort_LD_snps.nosex"),
+###        PRUNE_IN = temp(RESULTS + "/maf_ld_filtering/cohort_LD_snps.prune.in"),
+###        PRUNE_OUT = temp(RESULTS + "/maf_ld_filtering/cohort_LD_snps.prune.out"),
+###        PLINK_LOG = temp(RESULTS + "/maf_ld_filtering/cohort_LD_snps.log")
+###    params:
+###        LD_FILTER = "25 5 0.20",
+###        PLINK_PREFIX = RESULTS + "/maf_ld_filtering/cohort_LD_snps"
+###    threads:
+###        12
+###    conda:
+###        "config/sch_man_exomics.yml"
+###    log:
+###        LOGS + "/ld_filtering_from_phased_maf"
+###    shell:
+###        """
+###        plink \
+###            --vcf {input.MAF_FILTERED_VCF} \
+###            --allow-extra-chr \
+###            --indep-pairwise {params.LD_FILTER} \
+###            --out {params.PLINK_PREFIX} 
+
+###        vcftools \
+###            --vcf {input.MAF_FILTERED_VCF} \
+###            --exclude {output.LD_FILTERED_LIST} \
+###            --recode \
+###            --recode-INFO-all \
+###            --stdout \
+###            >{output.LD_FILTERED_VCF}
+###        """
 
 
