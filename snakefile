@@ -511,10 +511,8 @@ rule apply_variant_recal_and_filter:
         TARGET_VCF      = RESULTS + "/genotype/cohort_raw.vcf",
         TARGET_VCF_IDX  = RESULTS + "/genotype/cohort_raw.vcf.idx"
     output:
-        APPLIED_VCF  = RESULTS + "/variant_filtration/var_recal.vcf",
-        APPLIED_IDX  = RESULTS + "/variant_filtration/var_recal.vcf.idx",
-        FILTERED_VCF = RESULTS + "/variant_filtration/hard_filtered.vcf",
-        FILTERED_IDX = RESULTS + "/variant_filtration/hard_filtered.vcf.idx",
+        RECALIBRATED_VCF       = RESULTS + "/variant_filtration/var_recal.vcf",
+        RECALIBRATED_IDX       = RESULTS + "/variant_filtration/var_recal.vcf.idx",
     params:
         TRANCHE_LEVEL = "97.5"    
     threads:
@@ -525,22 +523,69 @@ rule apply_variant_recal_and_filter:
         LOGS + "/apply_variant_recal_and_filter"
     shell:
         """
-        bin/gatk-4.1.2.0/gatk ApplyVQSR \
+        bin/gatk-4.1.2.0/gatk  ApplyVQSR \
             -R {input.REFERENCE} \
             -V {input.TARGET_VCF} \
-            -O {output.APPLIED_VCF} \
+            -O {output.RECALIBRATED_VCF} \
             --truth-sensitivity-filter-level {params.TRANCHE_LEVEL} \
             --tranches-file {input.TRANCHES} \
             --recal-file {input.RECAL_VCF} \
             -mode SNP
+        """
+
+rule gatk_variant_filtration:
+    input:
+        RECALIBRATED_VCF  = RESULTS + "/variant_filtration/var_recal.vcf",
+        RECALIBRATED_IDX  = RESULTS + "/variant_filtration/var_recal.vcf.idx",
+        REFERENCE         = GENOME_FILE,
+    output:
+        SNP_VCF           = RESULTS + "/variant_filtration/snps_only.vcf",
+        SNP_IDX           = RESULTS + "/variant_filtration/snps_only.vcf.idx",
+        SITE_FILTERED_VCF = RESULTS + "/variant_filtration/site_filtered.vcf",
+        SITE_FILTERED_IDX = RESULTS + "/variant_filtration/site_filtered.vcf.idx",
+        HARD_FILTERED_VCF = RESULTS + "/variant_filtration/hard_filtered.vcf",
+        HARD_FILTERED_IDX = RESULTS + "/variant_filtration/hard_filtered.vcf.idx",
+    params:
+        TRANCHE_LEVEL = "97.5"    
+    threads:
+        12
+    conda:
+        "config/sch_man_nwinvasion-gatk4-env.yml"
+    log:
+        LOGS + "/gatk_variant_filtration"
+    shell:
+        """
+        bin/gatk-4.1.2.0/gatk SelectVariants \
+            -V {input.RECALIBRATED_VCF} \
+            -select-type SNP \
+            -O {output.SNP_VCF} \
+            -R {input.REFERENCE} \
+
+        bin/gatk-4.1.2.0/gatk  VariantFiltration \
+            -R {input.REFERENCE} \
+            -V {output.SNP_VCF} \
+            -O {output.SITE_FILTERED_VCF} \
+            --filter-expression "QD < 2.0" \
+            --filter-name "qd_lt_2"
+            --filter-expression "MQ < 30.0" \
+            --filter-name "mq_gt_30"
+            --filter-expression "FS > 60.0" \
+            --filter-name "fs_lt_60"
+            --filter-expression "SOR > 3.0" \
+            --filter-name "SOR_gt_3"
+            --filter-expression "MQRankSum < -12.5" \
+            --filter-name "MQRankSum_lt_-12.5"
+            --filter-expression "ReadPosRankSum < -8.0" \
+            --filter-name "ReadPosRankSum_lt_-8"
 
         bin/gatk-4.1.2.0/gatk SelectVariants \
-            -V {output.APPLIED_VCF} \
+            -V {output.SITE_FILTERED_VCF} \
             -select-type SNP \
             --exclude-filtered \
-            -O {output.FILTERED_VCF} \
-            -R {input.REFERENCE} \
+            -O {output.HARD_FILTERED_VCF} \
+            -R {input.REFERENCE}
         """
+
 
 ###rule ld_filtering_from_phased_maf:
 ###    input:
