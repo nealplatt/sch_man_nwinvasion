@@ -577,15 +577,15 @@ rule gatk_variant_filtration:
             -V {input.SNP_VCF} \
             -O {output.SITE_FILTERED_VCF} \
             --filter-expression "QD < 2.0" \
-            --filter-name "qd_lt_2"
+            --filter-name "qd_lt_2" \
             --filter-expression "MQ < 30.0" \
-            --filter-name "mq_gt_30"
+            --filter-name "mq_gt_30" \
             --filter-expression "FS > 60.0" \
-            --filter-name "fs_lt_60"
+            --filter-name "fs_lt_60" \
             --filter-expression "SOR > 3.0" \
-            --filter-name "SOR_gt_3"
+            --filter-name "SOR_gt_3" \
             --filter-expression "MQRankSum < -12.5" \
-            --filter-name "MQRankSum_lt_-12.5"
+            --filter-name "MQRankSum_lt_-12.5" \
             --filter-expression "ReadPosRankSum < -8.0" \
             --filter-name "ReadPosRankSum_lt_-8"
         """
