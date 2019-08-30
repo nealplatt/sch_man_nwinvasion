@@ -465,7 +465,7 @@ rule variant_recalibration:
         TARGETED_VCF        = RESULTS + "/genotype/cohort_raw.vcf",
         TARGETED_VCF_IDX    = RESULTS + "/genotype/cohort_raw.vcf.idx"
     output:
-        RECAL_VCF = temp( RESULTS + "/variant_filtration/snp_recal.vcf" ),
+        RECAL_VCF = RESULTS + "/variant_filtration/snp_recal.vcf",
         TRANCHES  = RESULTS + "/variant_filtration/snp_recal_tranches.csv",
         RSCRIPT   = RESULTS + "/variant_filtration/snp_recal_plots.R"
     threads:
@@ -552,6 +552,7 @@ rule select_snps:
         bin/gatk-4.1.2.0/gatk SelectVariants \
             -V {input.RECALIBRATED_VCF} \
             -select-type SNP \
+            --exclude-filtered \
             -O {output.SNP_VCF} \
             -R {input.REFERENCE} \
         """
@@ -590,7 +591,6 @@ rule gatk_variant_filtration:
             --filter-name "ReadPosRankSum_lt_-8"
         """
 
-
 rule hard_filter:
     input:
         SITE_FILTERED_VCF = RESULTS + "/variant_filtration/site_filtered.vcf",
@@ -614,42 +614,3 @@ rule hard_filter:
             -O {output.HARD_FILTERED_VCF} \
             -R {input.REFERENCE}
         """
-
-
-###rule ld_filtering_from_phased_maf:
-###    input:
-###        MAF_FILTERED_VCF = RESULTS + "/maf_ld_filtering/cohort_SMV7_phased_maf.vcf"
-###    output:
-###        LD_FILTERED_LIST = RESULTS + "/maf_ld_filtering/cohort_LD_snps.prune.out",
-###        LD_FILTERED_VCF = RESULTS + "/maf_ld_filtering/cohort_LD_snps.vcf",
-###        NO_SEX = temp(RESULTS + "/maf_ld_filtering/cohort_LD_snps.nosex"),
-###        PRUNE_IN = temp(RESULTS + "/maf_ld_filtering/cohort_LD_snps.prune.in"),
-###        PRUNE_OUT = temp(RESULTS + "/maf_ld_filtering/cohort_LD_snps.prune.out"),
-###        PLINK_LOG = temp(RESULTS + "/maf_ld_filtering/cohort_LD_snps.log")
-###    params:
-###        LD_FILTER = "25 5 0.20",
-###        PLINK_PREFIX = RESULTS + "/maf_ld_filtering/cohort_LD_snps"
-###    threads:
-###        12
-###    conda:
-###        "config/sch_man_exomics.yml"
-###    log:
-###        LOGS + "/ld_filtering_from_phased_maf"
-###    shell:
-###        """
-###        plink \
-###            --vcf {input.MAF_FILTERED_VCF} \
-###            --allow-extra-chr \
-###            --indep-pairwise {params.LD_FILTER} \
-###            --out {params.PLINK_PREFIX} 
-
-###        vcftools \
-###            --vcf {input.MAF_FILTERED_VCF} \
-###            --exclude {output.LD_FILTERED_LIST} \
-###            --recode \
-###            --recode-INFO-all \
-###            --stdout \
-###            >{output.LD_FILTERED_VCF}
-###        """
-
-
