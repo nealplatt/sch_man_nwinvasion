@@ -533,20 +533,20 @@ rule apply_variant_recal_and_filter:
             -mode SNP
         """
 
-rule select_snps:
+rule select_recal_snps:
     input:
         RECALIBRATED_VCF = RESULTS + "/variant_filtration/var_recal.vcf",
         RECALIBRATED_IDX = RESULTS + "/variant_filtration/var_recal.vcf.idx",
         REFERENCE        = GENOME_FILE,
     output:
-        SNP_VCF = RESULTS + "/variant_filtration/snps_only.vcf",
-        SNP_IDX = RESULTS + "/variant_filtration/snps_only.vcf.idx",
+        SNP_VCF = RESULTS + "/variant_filtration/recal_hq_snps_only.vcf",
+        SNP_IDX = RESULTS + "/variant_filtration/recal_hq_snps_only.vcf.idx",
     threads:
         12
     conda:
         "config/sch_man_nwinvasion-gatk4-env.yml"
     log:
-        LOGS + "/select_snps"
+        LOGS + "/select_recal_snps"
     shell:
         """
         bin/gatk-4.1.2.0/gatk SelectVariants \
@@ -559,8 +559,8 @@ rule select_snps:
 
 rule gatk_variant_filtration:
     input:
-        SNP_VCF           = RESULTS + "/variant_filtration/snps_only.vcf",
-        SNP_IDX           = RESULTS + "/variant_filtration/snps_only.vcf.idx",
+        SNP_VCF           = RESULTS + "/variant_filtration/recal_hq_snps_only.vcf",
+        SNP_IDX           = RESULTS + "/variant_filtration/recal_hq_snps_only.vcf.idx",
         REFERENCE         = GENOME_FILE,
     output:
         SITE_FILTERED_VCF = RESULTS + "/variant_filtration/site_filtered.vcf",
@@ -584,7 +584,7 @@ rule gatk_variant_filtration:
             --filter-expression "FS > 60.0" \
             --filter-name "fs_lt_60" \
             --filter-expression "SOR > 3.0" \
-            --filter-name "SOR_gt_3" \
+            --filter-name "SOR_lt_3" \
             --filter-expression "MQRankSum < -12.5" \
             --filter-name "MQRankSum_lt_-12.5" \
             --filter-expression "ReadPosRankSum < -8.0" \
