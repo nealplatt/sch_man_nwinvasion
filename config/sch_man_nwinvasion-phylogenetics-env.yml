@@ -1,0 +1,11 @@
+name: sch_man_nwinvasion-phylogenetics
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=main
+  - libgcc-ng=9.1.0=hdf63c60_0
+  - raxml=8.2.12=h14c3975_1
+prefix: /master/nplatt/anaconda3/envs/sch_man_nwinvasion-phylogenetics
+
