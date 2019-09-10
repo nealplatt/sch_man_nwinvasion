@@ -20,14 +20,17 @@ dependencies:
   - bcolz=1.2.1=py37h637b7d7_1001
   - bcrypt=3.1.6=py37h516909a_1
   - beagle=4.1_21Jan17.6cc.jar=1
+  - bedtools=2.29.0=h0da2602_0
   - binutils_impl_linux-64=2.31.1=h6176602_1
   - binutils_linux-64=2.31.1=h6176602_8
+  - biopython=1.74=py37h516909a_0
   - bleach=3.1.0=py37_0
   - blosc=1.17.0=he1b5a44_1
   - bokeh=1.3.4=py37_0
   - boto3=1.9.217=py_0
   - botocore=1.12.217=py_0
   - bwidget=1.9.11=0
+  - bz2file=0.98=py_0
   - bzip2=1.0.8=h516909a_0
   - ca-certificates=2019.6.16=hecc5488_0
   - cachetools=2.1.0=py_0
@@ -53,6 +56,7 @@ dependencies:
   - docutils=0.15.2=py37_0
   - dropbox=9.4.0=py_0
   - entrypoints=0.3=py37_1000
+  - ete3=3.1.1=py_1
   - expat=2.2.6=he6710b0_0
   - fasteners=0.14.1=py_3
   - filechunkio=1.8=py_2
@@ -159,7 +163,7 @@ dependencies:
   - olefile=0.46=py_0
   - openblas=0.3.3=h9ac9557_1001
   - openjdk=11.0.1=h516909a_1016
-  - openssl=1.1.1=h7b6447c_0
+  - openssl=1.1.1c=h516909a_0
   - owslib=0.18.0=py_0
   - packaging=19.0=py_0
   - pandas=0.25.1=py37hb3f55d8_0
@@ -192,6 +196,7 @@ dependencies:
   - pyasn1-modules=0.2.6=py_0
   - pycparser=2.19=py37_1
   - pyepsg=0.4.0=py_0
+  - pyfaidx=0.5.5.2=py_1
   - pygments=2.4.2=py_0
   - pygraphviz=1.3=py37h14c3975_1
   - pykdtree=1.3.1=py37h3010b51_1002
@@ -201,6 +206,7 @@ dependencies:
   - pyproj=2.3.0=py37h2fd02e8_0
   - pyqt=5.9.2=py37h22d08a2_1
   - pyrsistent=0.15.4=py37h516909a_0
+  - pysam=0.15.3=py37hda2845c_1
   - pysftp=0.2.9=py_1
   - pyshp=2.1.0=py_0
   - pysocks=1.7.0=py37_0
@@ -209,6 +215,7 @@ dependencies:
   - python-dateutil=2.8.0=py37_0
   - python-irodsclient=0.7.0=py_0
   - pytz=2019.2=py_0
+  - pyvcf=0.6.8=py37_1000
   - pyyaml=5.1.2=py37h516909a_0
   - pyzmq=18.0.2=py37h1768529_2
   - qt=5.9.7=h0c104cb_3
@@ -279,10 +286,12 @@ dependencies:
   - vcftools=0.1.16=he860b03_3
   - wcwidth=0.1.7=py_1
   - webencodings=0.5.1=py37_1
+  - whatshap=0.18=py37h6bb024c_0
   - wheel=0.33.6=py37_0
   - widgetsnbextension=3.5.1=py37_0
   - wrapt=1.11.2=py37h516909a_0
   - xmlrunner=1.7.7=py_0
+  - xopen=0.7.3=py_0
   - xorg-kbproto=1.0.7=h14c3975_1002
   - xorg-libice=1.0.10=h516909a_0
   - xorg-libsm=1.2.3=h84519dc_1000
