@@ -181,16 +181,16 @@ for POP in brazil niger tanzania senegal; do
     while read -r INDIV; do
 
         for HAP in 1 2; do
-            ##consensus
-            #bcftools consensus \
-            #    -H $HAP \
-            #    -M "?" \
-            #    --sample $INDIV \
-            #    -f data/genomes/Smansoni_v7.fa \
-            #    results/skyline/$POP/phased.vcf.gz \
-            #    >results/skyline/$POP/phased_genomes/$INDIV"_H"$HAP.phased.fasta
+            #consensus
+            bcftools consensus \
+                -H $HAP \
+                -M "?" \
+                --sample $INDIV \
+                -f data/genomes/Smansoni_v7.fa \
+                results/skyline/$POP/phased.vcf.gz \
+                >results/skyline/$POP/phased_genomes/$INDIV"_H"$HAP.phased.fasta
 
-            #getfasta (tab)
+            #getfasta (tab) from only selected loci per population
              bedtools getfasta \
                 -tab \
                 -fi results/skyline/$POP/phased_genomes/$INDIV"_H"$HAP.phased.fasta \
@@ -207,27 +207,24 @@ for POP in brazil niger tanzania senegal; do
 
 done
 
+
 #now set up replicate runs per population
-for REP in 1 2 3; do
+for POP in brazil niger tanzania senegal; do
+    for REP in 1 2 3; do
         
-    mkdir results/skyline/$POP/replicate_$REP
+        rm -r results/skyline/$POP/replicate_$REP
+        mkdir results/skyline/$POP/replicate_$REP
 
-    #randomize list of loci 
-    shuff results/skyline/$POP/$POP"_loci_gt3_lt50.bed" \
-        | shuff \
-            | shuff \
-                | head -n 50
-                    >results/skyline/$POP/replicate_$REP/locus.list
+        ##randomize list of loci 
+        for FILE in $(ls results/skyline/$POP/phased_loci_sequences/SM*fas | shuf | head -n 50); do
+            echo $FILE >>results/skyline/$POP/replicate_$REP/locus.list
 
-    #cp loci to rep dir
-    while read -r LOCUS; do
-
-        cp results/skyline/$POP/phased_loci_sequences/$LOCUS.fas \
-            results/skyline/$POP/replicate_$REP/
-
-    done < results/skyline/$POP/replicate_$REP/locus.list
+            FILE_NAME=$(basename $FILE)
+            cp $FILE results/skyline/$POP/replicate_$REP/$FILE_NAME
+        
+        done
+    done
 done
-
 
 #prep beauti files for skyline runs
 
