@@ -98,90 +98,136 @@ for POP in brazil niger senegal tanzania; do
             --stdout \
             >results/skyline/$POP/loci_vcfs/$POP"_"$CHROM"_"$START"_"$STOP.vcf"
 
-        echo $CONDA $VCF_CMD | $QSUB -N $POP"_"$CHROM"_"$START"_"$STOP -o results/skyline/$POP/logs/$POP"_"$CHROM"_"$START"_"$STOP.vcf.log
+        #echo $CONDA $VCF_CMD | $QSUB -N $POP"_"$CHROM"_"$START"_"$STOP -o results/skyline/$POP/logs/$POP"_"$CHROM"_"$START"_"$STOP.vcf.log
 
     done < $BED_FILE
 
 done
 
+#create pop specific lists of bam file
+ls results/mapped_reads/Sm.BR*processed.bam >results/skyline/brazil/bams.list
+ls results/mapped_reads/Sm.NE*processed.bam >results/skyline/niger/bams.list
+ls results/mapped_reads/Sm.SN*processed.bam >results/skyline/senegal/bams.list
+ls results/mapped_reads/Sm.TZ*processed.bam >results/skyline/tanzania/bams.list
 
+QSUB="qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 1 "
+#physically phase each locus
 for POP in brazil niger senegal tanzania; do
 
-    mkdir results/skyline/$POP/loci_vcfs
-    mkdir results/skyline/$POP/logs/
+    mkdir results/skyline/$POP/phased_vcfs
+    BAM_LIST=$(cat results/skyline/$POP/bams.list)
 
-    BED_FILE="results/skyline/$POP/"$POP"_loci_gt3_lt50.bed"
-    while read -r BED_ENTRY
-    do
+    for VCF in $(ls results/skyline/$POP/loci_vcfs/*.vcf); do
 
-        CHROM=$(echo $BED_ENTRY | cut -f1 -d" ")
-        START=$(echo $BED_ENTRY | cut -f2 -d" ")
-        STOP=$(echo $BED_ENTRY  | cut -f3 -d" ")
+        LOCUS=$(basename $VCF .vcf | cut -f2- -d"_")
+        
+        WHATSHAP_CMD="$CONDA whatshap phase \
+            -o results/skyline/$POP/phased_vcfs/"$POP"_"$LOCUS"_phased.vcf \
+            $VCF \
+            $BAM_LIST"
 
-        VCF_CMD="vcftools \
-            --vcf results/skyline/$POP/smv7_ex_autosomes_informative_$POP.vcf \
-            --chr $CHROM \
-            --from-bp $START \
-            --to-bp $STOP\
-            --recode \
-            --recode-INFO-all \
-            --stdout \
-            >results/skyline/$POP/loci_vcfs/$POP"_"$CHROM"_"$START"_"$STOP.vcf"
+        echo $WHATSHAP_CMD | $QSUB -N $POP"_"$LOCUS"_whatshap" -o results/skyline/$POP/logs/$POP"_"$LOCUS"_whatshap.vcf.log"
 
-        echo $CONDA $VCF_CMD | $QSUB -N $POP"_"$CHROM"_"$START"_"$STOP -o results/skyline/$POP/logs/$POP"_"$CHROM"_"$START"_"$STOP.vcf.log
+    done 
+done
 
-    done < $BED_FILE
+#merge all population vcf files
 
+#create pop specific lists of bam file
+for POP in brazil niger senegal tanzania; do
+    ls results/skyline/$POP/phased_vcfs/*.vcf \
+        >results/skyline/$POP/phased_vcfs/phased_vcfs.list
+
+    bin/gatk-4.1.2.0/gatk --java-options "-Xmx4g" \
+        MergeVcfs \
+            --MAX_RECORDS_IN_RAM 500000 \
+            -I results/skyline/$POP/phased_vcfs/phased_vcfs.list \
+            -O results/skyline/$POP/phased.vcf
 done
 
 
-#physical phasing via whatshap
-#phase brazil
-BRZ_CMD="whatshap phase \
-    -o results/skyline/$POP/"$POP"_loci_gt3_lt50_phased.vcf \
-    results/skyline/$POP/"$POP"_loci_gt3_lt50.vcf \
-    $(ls results/mapped_reads/Sm.BR_PdV.*processed.bam)"
+#for POP in tanzania; do
+#    for CHR in 1 2 3 4 5 6 7; do
+#        ls tanzania_SM_V7_$CHR*.vcf \
+#            >$CHR.list
 
-#phase niger
-NGR_CMD="whatshap phase \
-    -o results/skyline/$POP/"$POP"_loci_gt3_lt50_phased.vcf \
-    results/skyline/$POP/"$POP"_loci_gt3_lt50.vcf \
-    $(ls results/mapped_reads/Sm.NE*processed.bam)"
+#        ../../../../bin/gatk-4.1.2.0/gatk --java-options "-Xmx4g" \
+#            MergeVcfs \
+#                --MAX_RECORDS_IN_RAM 500000 \
+#                -I $CHR.list \
+#                -O $CHR.vcf
+#    done
+#done
 
-#phase tanzania
-TNZ_CMD="whatshap phase \
-    -o results/skyline/$POP/"$POP"_loci_gt3_lt50_phased.vcf \
-    results/skyline/$POP/"$POP"_loci_gt3_lt50.vcf \
-    $(ls results/mapped_reads/Sm.NE*processed.bam)"
-
-#phase senegal
-SNG_CMD="whatshap phase \
-    -o results/skyline/$POP/"$POP"_loci_gt3_lt50_phased.vcf \
-    results/skyline/$POP/"$POP"_loci_gt3_lt50.vcf \
-    $(ls results/mapped_reads/Sm.SN*processed.bam)"
+#ls ?.vcf >chrs.list
+#        ../../../../bin/gatk-4.1.2.0/gatk --java-options "-Xmx4g" \
+#            MergeVcfs \
+#                --MAX_RECORDS_IN_RAM 500000 \
+#                -I chrs.list \
+#                -O phased.vcf
 
 
-#submit jobs to scheduler
-QSUB="qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 12 "
+#bgzip and taibx pop vcf
+#consensus for each individual
+for POP in brazil niger tanzania senegal; do
+    
+    #bgzip results/skyline/$POP/phased.vcf
+    #tabix results/skyline/$POP/phased.vcf.gz
 
-echo $BRZ_CMD | $QSUB -N BRZ.whatshap -o results/skyline/brazil/whatshap.log
-echo $SNG_CMD | $QSUB -N SNG.whatshap -o results/skyline/senegal/whatshap.log
-echo $NGR_CMD | $QSUB -N NGR.whatshap -o results/skyline/niger/whatshap.log
-echo $TNZ_CMD | $QSUB -N TNZ.whatshap -o results/skyline/tanzania/whatshap.log
+    #mkdir results/skyline/$POP/phased_genomes
+    rm -r results/skyline/$POP/phased_loci_sequences
+    mkdir results/skyline/$POP/phased_loci_sequences
+
+    while read -r INDIV; do
+
+        for HAP in 1 2; do
+            ##consensus
+            #bcftools consensus \
+            #    -H $HAP \
+            #    -M "?" \
+            #    --sample $INDIV \
+            #    -f data/genomes/Smansoni_v7.fa \
+            #    results/skyline/$POP/phased.vcf.gz \
+            #    >results/skyline/$POP/phased_genomes/$INDIV"_H"$HAP.phased.fasta
+
+            #getfasta (tab)
+             bedtools getfasta \
+                -tab \
+                -fi results/skyline/$POP/phased_genomes/$INDIV"_H"$HAP.phased.fasta \
+                -bed results/skyline/$POP/$POP"_loci_gt3_lt50.bed" \
+                -fo results/skyline/$POP/phased_loci_sequences/$INDIV"_H"$HAP.phased.tab
+
+            ##print to loci files
+            awk -v header="$INDIV"_H"$HAP" -v outdir="results/skyline/$POP/phased_loci_sequences/" \
+                '{print ">"header"#"$1"\n"$2 >>outdir$1".fas"}' \
+                results/skyline/$POP/phased_loci_sequences/$INDIV"_H"$HAP.phased.tab
+        done
+
+    done < results/skyline/$POP/$POP.list
+
+done
+
+#now set up replicate runs per population
+for REP in 1 2 3; do
+        
+    mkdir results/skyline/$POP/replicate_$REP
+
+    #randomize list of loci 
+    shuff results/skyline/$POP/$POP"_loci_gt3_lt50.bed" \
+        | shuff \
+            | shuff \
+                | head -n 50
+                    >results/skyline/$POP/replicate_$REP/locus.list
+
+    #cp loci to rep dir
+    while read -r LOCUS; do
+
+        cp results/skyline/$POP/phased_loci_sequences/$LOCUS.fas \
+            results/skyline/$POP/replicate_$REP/
+
+    done < results/skyline/$POP/replicate_$REP/locus.list
+done
 
 
-
-
-
-
-
-
-
-
-
-
-#bgzip phased.vcf
-#tabix phased.vcf.gz
-#bcftools consensus -H 1 -f reference.fasta phased.vcf.gz > haplotype1.fasta
-#bcftools consensus -H 2 -f reference.fasta phased.vcf.gz > haplotype2.fasta
+#prep beauti files for skyline runs
 
