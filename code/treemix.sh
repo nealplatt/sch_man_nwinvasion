@@ -38,6 +38,23 @@ vcftools \
     >results/treemix/smv7_ex_autosomes_mansoni_ld.vcf
 
 
+cp results/skyline/brazil/brazil.list .
+cp results/skyline/tanzania/tanzania.list .
+cp results/skyline/niger/niger.list .
+cp results/skyline/senegal/senegal.list .
+
+
+for POP in brazil niger senegal tanzania; do
+    vcftools \
+        --vcf results/treemix/smv7_ex_autosomes_mansoni_ld.vcf \
+        --keep results/treemix/$POP.list \
+        --counts \
+        --out results/treemix/smv7_ex_autosomes_mansoni_ld_$POP
+done
+
+#paste them all together
+#clean up into treemix format
+
 #By default, TreeMix assumes biallelic sites. The input le is a gzipped le that consists of a header
 #with a space-delimited list of the names of populations, followed by lines containing the allele counts
 #at each SNP. It is assumed that the order of the SNPs in the le is the order of the SNPs in the
