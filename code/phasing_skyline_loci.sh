@@ -340,5 +340,10 @@ done
 #java -jar beast.jar -working -seed 12345 -threads 1 -overwrite results/skyline/brazil/replicate_1/brazil_rep1.xml
 
 
+#java -cp ./bin/beast.jar beast.app.tools.EBSPAnalyser \
+#    -i results/skyline/niger/replicate_1/EBSP.log \
+#    -burnin 20 \
+#    -type linear \
+#    -o results/skyline/niger/replicate_1/EBSP_linear_20p.tsv
 
 
