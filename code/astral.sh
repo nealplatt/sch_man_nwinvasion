@@ -56,8 +56,8 @@ done <results/astral/samples.list
 while read -r INDIV; do
 
     ##print to loci files
-    awk -v header=$INDIV"_" -v outdir="results/astral/locus_sequences/" \
-        '{print ">"header"#"$1"\n"$2 >>outdir$1".fas"}' \
+    awk -v header=$INDIV -v outdir="results/astral/locus_sequences/" \
+        '{print ">"header"\n"$2 >>outdir$1".fas"}' \
         results/astral/locus_sequences/"$INDIV".tab
 
 done <results/astral/samples.list
@@ -78,7 +78,7 @@ for CHR in 1 2 3 4 5 6 7; do
 done 
 
 #create a clean loci_summary file (remove excess headers)
-cat results/astral/SM_V7_1_loci_summary.tsv >results/astral/loci_summary.tsv
+cp results/astral/SM_V7_1_loci_summary.tsv results/astral/loci_summary.tsv
 for CHR in 2 3 4 5 6 7; do
     sed 1d results/astral/SM_V7_"$CHR"_loci_summary.tsv \
         >>results/astral/loci_summary.tsv
@@ -88,13 +88,64 @@ rm results/astral/SM_V7_?_loci_summary.tsv
 
 #copy to new dir of informative loci
 for PARS_INF_LOCUS in $(sed 1d results/astral/loci_summary.tsv | awk '{if ($9 > 1) print $1}'); do
-    cp results/astral/loci_sequences/$PARS_INF_LOCUS \
-        results/astral/informative_loci/ 
+    sed 's/:/-/' results/astral/locus_sequences/$PARS_INF_LOCUS \
+        >results/astral/informative_loci/$PARS_INF_LOCUS
 done 
 
+#remove ":" in all sequence headers
 
-#now do a raxml run for each locus (fast with 100k bootstrap replicates)
+
+
+#now do a raxml run for each locus (fast with 100 bootstrap replicates)
+mkdir results/astral/raxml_genetrees
+
+QSUB="qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 4"
+for LOCUS in $(sed 1d results/astral/loci_summary.tsv | cut -f1); do
+
+    NO_COLON=$(echo $LOCUS | sed 's/:/-/')
+
+    RAXML_CMD="$CONDA raxmlHPC-PTHREADS \
+        -f a \
+        -T 4
+        -m GTRGAMMA \
+        -p 12345 \
+        -x 12345 \
+        -# 100 \
+        -s "$(pwd)"/results/astral/informative_loci/$LOCUS \
+        -n $NO_COLON \
+        -w "$(pwd)"/results/astral/raxml_genetrees"
+
+        #dont overload the cluster        
+        NUM_JOBS=$(qstat | wc -l)
+
+        while [ $NUM_JOBS -gt 1200 ]; do
+            sleep 10s
+            NUM_JOBS=$(qstat | wc -l)
+        done    
+        
+    echo $RAXML_CMD | $QSUB -N "$NO_COLON"_raxml -o results/astral/logs/"$NO_COLON"_raxml.log
+done 
+
+raxmlHPC -f a -m GTRGAMMA -p 12345 -x 12345 -# 1000 -s $LOCUS -n $LOCUS -w
+
 
 #collapse unsupported branches
 
 
+nw_luaed \
+    /master/nplatt/sch_man_nwinvasion/results/astral/raxml_genetrees/RAxML_bipartitionsBranchLabels.SM_V7_1-10111508-10111868.fas \
+    ’i and b < 50’ ’o()’
+
+i & (b < 50)
+#combine newick trees into single file
+ cat /master/nplatt/sch_man_nwinvasion/results/astral/raxml_genetrees/RAxML_bipartitions.*.fas >results/astral/genetrees.nwk
+
+
+#run astral
+wget -P bin/ https://github.com/smirarab/ASTRAL/raw/master/Astral.5.6.3.zip
+unzip bin/Astral.5.6.3.zip -d bin/
+
+java -jar bin/Astral/astral.5.6.3.jar \
+    -i results/astral/genetrees.nwk \
+    -o results/astral/astral.nwk \
+    2>results/astral/astral.log
