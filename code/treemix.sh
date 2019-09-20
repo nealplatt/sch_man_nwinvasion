@@ -22,6 +22,20 @@ vcftools \
     >results/treemix/smv7_ex_autosomes_mansoni.vcf
 
 #ld filter
+plink \
+    --vcf results/treemix/smv7_ex_autosomes_mansoni.vcf \
+    --double-id \
+    --allow-extra-chr \
+    --indep-pairwise 250kb 1 0.20 \
+    --out results/treemix/smv7_ex_autosomes_mansoni_ld
+
+vcftools \
+    --vcf results/treemix/smv7_ex_autosomes_mansoni.vcf \
+    --exclude results/treemix/smv7_ex_autosomes_mansoni_ld.prune.out \
+    --recode \
+    --recode-INFO-all \
+    --stdout \
+    >results/treemix/smv7_ex_autosomes_mansoni_ld.vcf
 
 
 #By default, TreeMix assumes biallelic sites. The input le is a gzipped le that consists of a header
