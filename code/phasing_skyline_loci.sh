@@ -8,57 +8,57 @@ bedtools merge \
 
 for POP in brazil niger senegal tanzania; do
 
-    #mkdir results/skyline/$POP
+    mkdir results/skyline/$POP
 
     ##get biallelic snps for each population
-    #vcftools \
-    #    --vcf results/variant_filtration/smv7_ex_autosomes.vcf \
-    #    --keep results/skyline/$POP/$POP.list \
-    #    --mac 2 \
-    #    --recode \
-    #    --recode-INFO-all \
-    #    --stdout \
-    #    >results/skyline/$POP/smv7_ex_autosomes_$POP.vcf &
-
-    #remove uninformative loci from each population
     vcftools \
-        --vcf results/skyline/$POP/smv7_ex_autosomes_$POP.vcf \
-        --singletons \
-        --stdout \
-        >results/skyline/$POP/smv7_ex_autosomes_singletons_$POP.tbl
-        
-    cut -f1,2 results/skyline/$POP/smv7_ex_autosomes_singletons_$POP.tbl \
-        >results/skyline/$POP/smv7_ex_autosomes_singletons_$POP.list
-
-    vcftools \
-        --vcf results/skyline/$POP/smv7_ex_autosomes_$POP.vcf \
-        --exclude-positions results/skyline/$POP/smv7_ex_autosomes_singletons_$POP.list \
+        --vcf results/variant_filtration/smv7_ex_autosomes.vcf \
+        --keep results/skyline/$POP/$POP.list \
+        --mac 2 \
         --recode \
         --recode-INFO-all \
         --stdout \
-        >results/skyline/$POP/smv7_ex_autosomes_informative_$POP.vcf
-   
+        >results/skyline/$POP/smv7_ex_autosomes_$POP.vcf
 
-    #find snps in 500bp regions (from baits)
-    bedtools intersect \
-        -c \
-        -a results/skyline/merged_baits.bed \
-        -b results/skyline/$POP/smv7_ex_autosomes_informative_$POP.vcf \
-        > results/skyline/$POP/"$POP"_snps_per_bait.bed
-    
-    ##count the number of genotyped and filter for too may and too few
-    cat results/skyline/$POP/"$POP"_snps_per_bait.bed \
-        | awk '{ if ($4>2 && $4<150) print $0 }' \
-            > results/skyline/$POP/"$POP"_loci_gt2_lt150.bed
+#    #remove uninformative loci from each population
+#    vcftools \
+#        --vcf results/skyline/$POP/smv7_ex_autosomes_$POP.vcf \
+#        --singletons \
+#        --stdout \
+#        >results/skyline/$POP/smv7_ex_autosomes_singletons_$POP.tbl
+#        
+#    cut -f1,2 results/skyline/$POP/smv7_ex_autosomes_singletons_$POP.tbl \
+#        >results/skyline/$POP/smv7_ex_autosomes_singletons_$POP.list
 
-    #extract snps from target loci
-    vcftools \
-        --vcf results/skyline/$POP/smv7_ex_autosomes_informative_$POP.vcf \
-        --bed results/skyline/$POP/"$POP"_loci_gt2_lt150.bed \
-        --recode \
-        --recode-INFO-all \
-        --stdout \
-        >results/skyline/$POP/"$POP"_loci_gt2_lt150.vcf &
+#    vcftools \
+#        --vcf results/skyline/$POP/smv7_ex_autosomes_$POP.vcf \
+#        --exclude-positions results/skyline/$POP/smv7_ex_autosomes_singletons_$POP.list \
+#        --recode \
+#        --recode-INFO-all \
+#        --stdout \
+#        >results/skyline/$POP/smv7_ex_autosomes_informative_$POP.vcf
+#   
+
+#    #find snps in 500bp regions (from baits)
+#    bedtools intersect \
+#        -c \
+#        -a results/skyline/merged_baits.bed \
+#        -b results/skyline/$POP/smv7_ex_autosomes_informative_$POP.vcf \
+#        > results/skyline/$POP/"$POP"_snps_per_bait.bed
+#    
+#    ##count the number of genotyped and filter for too may and too few
+#    cat results/skyline/$POP/"$POP"_snps_per_bait.bed \
+#        | awk '{ if ($4>2 && $4<150) print $0 }' \
+#            > results/skyline/$POP/"$POP"_loci_gt2_lt150.bed
+
+#    #extract snps from target loci
+#    vcftools \
+#        --vcf results/skyline/$POP/smv7_ex_autosomes_informative_$POP.vcf \
+#        --bed results/skyline/$POP/"$POP"_loci_gt2_lt150.bed \
+#        --recode \
+#        --recode-INFO-all \
+#        --stdout \
+#        >results/skyline/$POP/"$POP"_loci_gt2_lt150.vcf
     
 done
 
@@ -142,55 +142,135 @@ done
 
 #create pop specific lists of bam file
 for POP in brazil niger senegal tanzania; do
-    ls results/skyline/$POP/phased_vcfs/*.vcf \
-        >results/skyline/$POP/phased_vcfs/phased_vcfs.list
+    for CHR in 1 2 3 4 5 6 7 MITO; do
+        
+        #create list
+        ls results/skyline/$POP/phased_vcfs/$POP"_SM_V7_"$CHR*.vcf \
+        >results/skyline/$POP/phased_vcfs/$POP"_SM_V7_"$CHR.list
 
-    bin/gatk-4.1.2.0/gatk --java-options "-Xmx40g" \
+        bin/gatk-4.1.2.0/gatk --java-options "-Xmx10g" \
+            MergeVcfs \
+                --MAX_RECORDS_IN_RAM 500000 \
+                -I results/skyline/$POP/phased_vcfs/$POP"_SM_V7_"$CHR.list \
+                -O results/skyline/$POP/phased_vcfs/$POP"_SM_V7_"$CHR.vcf
+    done
+
+done
+
+
+ls results/skyline/tanzania/phased_vcfs/tanzania_SM_V7_1*.vcf | split -l 2499 --additional-suffix .list
+
+bin/gatk-4.1.2.0/gatk --java-options "-Xmx10g" \
+            MergeVcfs \
+                --MAX_RECORDS_IN_RAM 500000 \
+                -I xaa.list \
+                -O tanzania_SM_V7_1a.vcf
+
+bin/gatk-4.1.2.0/gatk --java-options "-Xmx10g" \
+            MergeVcfs \
+                --MAX_RECORDS_IN_RAM 500000 \
+                -I xab.list \
+                -O tanzania_SM_V7_1b.vcf
+
+ls tanzania_SM_V7_1*vcf >vcf.list
+
+bin/gatk-4.1.2.0/gatk --java-options "-Xmx10g" \
+            MergeVcfs \
+                --MAX_RECORDS_IN_RAM 500000 \
+                -I vcf.list \
+                -O results/skyline/tanzania/phased_vcfs/tanzania_SM_V7_1.vcf
+
+#clean up
+rm xaa.list
+rm xab.list
+rm tanzania_SM_V7_1a.vcf
+rm tanzania_SM_V7_1a.vcf.idx
+rm tanzania_SM_V7_1b.vcf
+rm tanzania_SM_V7_1b.vcf.idx
+rm vcf.list
+
+
+
+for POP in brazil niger senegal tanzania; do
+    ls results/skyline/$POP/phased_vcfs/$POP"_SM_V7_"?.vcf results/skyline/$POP/phased_vcfs/$POP"_SM_V7_MITO.vcf" \
+        >results/skyline/$POP/phased_vcfs/$POP.list
+
+     bin/gatk-4.1.2.0/gatk --java-options "-Xmx40g" \
         MergeVcfs \
             --MAX_RECORDS_IN_RAM 500000 \
-            -I results/skyline/$POP/phased_vcfs/phased_vcfs.list \
+            -I results/skyline/$POP/phased_vcfs/$POP.list \
             -O results/skyline/$POP/phased.vcf
 done
 
 
-#for POP in tanzania; do
-#    for CHR in 1 2 3 4 5 6 7; do
-#        ls tanzania_SM_V7_$CHR*.vcf \
-#            >$CHR.list
-
-#        ../../../../bin/gatk-4.1.2.0/gatk --java-options "-Xmx4g" \
-#            MergeVcfs \
-#                --MAX_RECORDS_IN_RAM 500000 \
-#                -I $CHR.list \
-#                -O $CHR.vcf
-#    done
-#done
-
-#ls ?.vcf >chrs.list
-#        ../../../../bin/gatk-4.1.2.0/gatk --java-options "-Xmx4g" \
-#            MergeVcfs \
-#                --MAX_RECORDS_IN_RAM 500000 \
-#                -I chrs.list \
-#                -O phased.vcf
-
-
-
+CONDA="conda activate sch_man_nwinvasion-nbanalyses; "
 #generate a phased genome and extract individual loci from them (in tab)
+for POP in brazil niger tanzania senegal; do
+    
+    QSUB="qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 12"
+    bgzip results/skyline/$POP/phased.vcf
+    tabix -f results/skyline/$POP/phased.vcf.gz
+
+    if [ -d results/skyline/$POP/phased_genomes  ]; then
+        rm -r results/skyline/$POP/phased_genomes
+        mkdir results/skyline/$POP/phased_genomes
+    fi
+
+    if [ -d results/skyline/$POP/phased_loci_sequences  ]; then
+        rm -r results/skyline/$POP/phased_loci_sequences
+        mkdir results/skyline/$POP/phased_loci_sequences
+    fi
+
+
+    if [ -d results/skyline/$POP/logs  ]; then
+        rm -r results/skyline/$POP/logs
+        mkdir results/skyline/$POP/logs
+    fi
+
+  
+    #select  random indivuals per population
+    shuf results/skyline/$POP/$POP.list | head -n 15 >results/skyline/$POP/"$POP"_random.list
+
+    while read -r INDIV; do
+        for HAP in 1 2; do
+            #consensus
+            CONS_CMD="$CONDA bcftools consensus \
+                -H $HAP \
+                -M \"?\" \
+                --sample $INDIV \
+                -f data/genomes/Smansoni_v7.fa \
+                results/skyline/$POP/phased.vcf \
+                >results/skyline/$POP/phased_genomes/$INDIV"_H"$HAP.phased.fasta"
+
+            BED_CMD="$CONDA bedtools getfasta \
+                -tab \
+                -fi results/skyline/$POP/phased_genomes/$INDIV"_H"$HAP.phased.fasta \
+                -bed results/skyline/$POP/"$POP"_loci_gt2_lt150.bed \
+                -fo results/skyline/$POP/phased_loci_sequences/$INDIV"_H"$HAP.phased.tab"
+
+            echo $CONS_CMD | $QSUB -N $INDIV"_H"$HAP.phased -o results/skyline/$POP/logs/$INDIV"_H"$HAP.phased.log
+            echo $BED_CMD  | $QSUB -N $INDIV"_H"$HAP.bed    -o results/skyline/$POP/logs/$INDIV"_H"$HAP.bed.log -hold_jid $INDIV"_H"$HAP.phased     
+        done
+
+    done <results/skyline/$POP/$POP.list
+done
+
+
+#-----------------------------------<<<<<<<<<<<<<<<<<<<<<
 for POP in brazil niger tanzania senegal; do
     
     QSUB="qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 12"
     #bgzip results/skyline/$POP/phased.vcf
     #tabix -f results/skyline/$POP/phased.vcf.gz
 
-    rm -r results/skyline/$POP/phased_genomes
-    mkdir results/skyline/$POP/phased_genomes
-    rm -r results/skyline/$POP/phased_loci_sequences
-    mkdir results/skyline/$POP/phased_loci_sequences
-    rm -r results/skyline/$POP/logs
-    mkdir results/skyline/$POP/logs
+
+    if [ -d results/skyline/$POP/logs  ]; then
+        rm -r results/skyline/$POP/logs
+        mkdir results/skyline/$POP/logs
+    fi
    
     #select  random indivuals per population
-    #shuf results/skyline/$POP/$POP.list | head -n 10 >results/skyline/$POP/"$POP"_random.list
+    shuf results/skyline/$POP/$POP.list | head -n 20 >results/skyline/$POP/"$POP"_random.list
 
     while read -r INDIV; do
         for HAP in 1 2; do
@@ -209,52 +289,11 @@ for POP in brazil niger tanzania senegal; do
                 -bed results/skyline/$POP/"$POP"_loci_gt2_lt150.bed \
                 -fo results/skyline/$POP/phased_loci_sequences/$INDIV"_H"$HAP.phased.tab"
 
-            echo $CONS_CMD | $QSUB -N $INDIV"_H"$HAP.phased -o results/skyline/$POP/logs/$INDIV"_H"$HAP.phased.log
+            #echo $CONS_CMD | $QSUB -N $INDIV"_H"$HAP.phased -o results/skyline/$POP/logs/$INDIV"_H"$HAP.phased.log
             echo $BED_CMD  | $QSUB -N $INDIV"_H"$HAP.bed    -o results/skyline/$POP/logs/$INDIV"_H"$HAP.bed.log -hold_jid $INDIV"_H"$HAP.phased     
         done
 
-    done <results/skyline/$POP/$POP.list
-done
-
-
-for POP in brazil niger tanzania senegal; do
-    
-    QSUB="qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 12"
-    #bgzip results/skyline/$POP/phased.vcf
-    #tabix -f results/skyline/$POP/phased.vcf.gz
-
-    rm -r results/skyline/$POP/phased_genomes
-    mkdir results/skyline/$POP/phased_genomes
-    rm -r results/skyline/$POP/phased_loci_sequences
-    mkdir results/skyline/$POP/phased_loci_sequences
-    rm -r results/skyline/$POP/logs
-    mkdir results/skyline/$POP/logs
-   
-    #select  random indivuals per population
-    #shuf results/skyline/$POP/$POP.list | head -n 10 >results/skyline/$POP/"$POP"_random.list
-
-    while read -r INDIV; do
-        for HAP in 1 2; do
-            #consensus
-            CONS_CMD="$CONDA bcftools consensus \
-                -H $HAP \
-                -M \"?\" \
-                --sample $INDIV \
-                -f data/genomes/Smansoni_v7.fa \
-                results/skyline/$POP/phased.vcf.gz \
-                >results/skyline/$POP/phased_genomes/$INDIV"_H"$HAP.phased.fasta"
-
-            BED_CMD="bedtools getfasta \
-                -tab \
-                -fi results/skyline/$POP/phased_genomes/$INDIV"_H"$HAP.phased.fasta \
-                -bed results/skyline/$POP/"$POP"_loci_gt2_lt150.bed \
-                -fo results/skyline/$POP/phased_loci_sequences/$INDIV"_H"$HAP.phased.tab"
-
-            echo $CONS_CMD | $QSUB -N $INDIV"_H"$HAP.phased -o results/skyline/$POP/logs/$INDIV"_H"$HAP.phased.log
-            echo $BED_CMD  | $QSUB -N $INDIV"_H"$HAP.bed    -o results/skyline/$POP/logs/$INDIV"_H"$HAP.bed.log -hold_jid $INDIV"_H"$HAP.phased     
-        done
-
-    done <results/skyline/$POP/$POP.list
+    done <results/skyline/$POP/"$POP"_random.list
 done
 
 

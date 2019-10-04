@@ -1,4 +1,4 @@
-#treemix
+#treemix 
 
 mkdir results/treemix
 
@@ -52,16 +52,38 @@ for POP in brazil niger senegal tanzania; do
         --out results/treemix/smv7_ex_autosomes_mansoni_ld_$POP
 done
 
-#paste them all together
-#clean up into treemix format
+for POP in brazil niger senegal tanzania; do
+    FRQ_FILE=results/treemix/smv7_ex_autosomes_mansoni_ld_"$POP".frq.count
+    TMX_FILE=results/treemix/smv7_ex_autosomes_mansoni_ld_"$POP".frq.tmx
+    cat $FRQ_FILE | cut -f5,6 | sed 's/[A|T|C|G]://g' | awk '{print $1","$2}' | sed 1d | sed "1 i\\$POP" >$TMX_FILE
 
-#By default, TreeMix assumes biallelic sites. The input le is a gzipped le that consists of a header
-#with a space-delimited list of the names of populations, followed by lines containing the allele counts
-#at each SNP. It is assumed that the order of the SNPs in the le is the order of the SNPs in the
-#genome. The line is space delimited between populations, and the two allele within the population
-#are comma-delimited. For example:
+done
 
+paste results/treemix/smv7_ex_autosomes_mansoni_ld_*.frq.tmx \
+    | gzip \
+    >results/treemix/smv7_ex_autosomes_mansoni_ld.treemix.gz
+
+#looking for format like:
 #pop1 pop2 pop3 pop4
 #5,1 1,1 4,0 0,4
 #3,3 0,2 2,2 0,4
 #1,5 0,2 2,2 1,3
+
+treemix -i $FILE.treemix.frq.gz \
+    -m $i \
+    -o $FILE.$i \
+    -root GoldenJackal \
+    -bootstrap \
+    -k 500 \
+    -noss > treemix_${i}_log &
+
+treemix -i results/treemix/smv7_ex_autosomes_mansoni_ld.treemix.gz -k 500 -noss -o out -root tanzania -m 1
+
+wget -P bin/ https://bitbucket.org/nygcresearch/treemix/downloads/treemix-1.13.tar.gz
+tar -xvzf bin/treemix-1.13.tar.gz -C bin/treemix
+
+source("bin/treemix-1.13/src/plotting_funcs.R")
+plot tree("out")
+
+
+

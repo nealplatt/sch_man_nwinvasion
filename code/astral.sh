@@ -94,8 +94,6 @@ done
 
 #remove ":" in all sequence headers
 
-
-
 #now do a raxml run for each locus (fast with 100 bootstrap replicates)
 mkdir results/astral/raxml_genetrees
 
@@ -126,24 +124,21 @@ for LOCUS in $(sed 1d results/astral/loci_summary.tsv | cut -f1); do
     echo $RAXML_CMD | $QSUB -N "$NO_COLON"_raxml -o results/astral/logs/"$NO_COLON"_raxml.log
 done 
 
-raxmlHPC -f a -m GTRGAMMA -p 12345 -x 12345 -# 1000 -s $LOCUS -n $LOCUS -w
 
+#000000000000000000000000000000000000000000000000000000000000000000000
 
-#collapse unsupported branches
+##collapse unsupported branches
+#nw_luaed \
+#    /master/nplatt/sch_man_nwinvasion/results/astral/raxml_genetrees/RAxML_bipartitionsBranchLabels.SM_V7_1-10111508-10111868.fas \
+#    ’i and b < 50’ ’o()’
 
-
-nw_luaed \
-    /master/nplatt/sch_man_nwinvasion/results/astral/raxml_genetrees/RAxML_bipartitionsBranchLabels.SM_V7_1-10111508-10111868.fas \
-    ’i and b < 50’ ’o()’
-
-i & (b < 50)
 #combine newick trees into single file
- cat /master/nplatt/sch_man_nwinvasion/results/astral/raxml_genetrees/RAxML_bipartitions.*.fas >results/astral/genetrees.nwk
+cat /master/nplatt/sch_man_nwinvasion/results/astral/raxml_genetrees/RAxML_bipartitions.*.fas \
+    sed 's/#/-/g' >results/astral/genetrees.nwk
 
-
-#run astral
-wget -P bin/ https://github.com/smirarab/ASTRAL/raw/master/Astral.5.6.3.zip
-unzip bin/Astral.5.6.3.zip -d bin/
+##run astral
+#wget -P bin/ https://github.com/smirarab/ASTRAL/raw/master/Astral.5.6.3.zip
+#unzip bin/Astral.5.6.3.zip -d bin/
 
 java -jar bin/Astral/astral.5.6.3.jar \
     -i results/astral/genetrees.nwk \
