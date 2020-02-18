@@ -67,7 +67,7 @@ plot(dcms,
 
 out_data<-data.frame(dfv, dfp, dcms)
 
-#write.csv(out_data, "nw_vs_ea_dcms.csv", row.names=FALSE, quote=FALSE)
+write.csv(out_data, "nw_vs_ea_dcms.csv", row.names=FALSE, quote=FALSE)
 
 #make bed
 sig_quantile<-quantile(out_data$dcms, 0.995)
@@ -139,7 +139,7 @@ plot(dcms,
 
 out_data<-data.frame(dfv, dfp, dcms)
 
-#write.csv(out_data, "wa_vs_ea_dcms.csv", row.names=FALSE, quote=FALSE)
+write.csv(out_data, "wa_vs_ea_dcms.csv", row.names=FALSE, quote=FALSE)
 
 #make bed
 sig_quantile<-quantile(out_data$dcms, 0.995)
@@ -210,7 +210,7 @@ plot(dcms,
 
 out_data<-data.frame(dfv, dfp, dcms)
 
-#write.csv(out_data, "nw_vs_wa_dcms.csv", row.names=FALSE, quote=FALSE)
+write.csv(out_data, "nw_vs_wa_dcms.csv", row.names=FALSE, quote=FALSE)
 
 #make bed
 sig_quantile<-quantile(out_data$dcms, 0.995)
