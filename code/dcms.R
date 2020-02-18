@@ -1,3 +1,4 @@
+library("dplyr")
 library("rrcovNA")
 library(MINOTAUR)
 library("MASS")
