@@ -49,3 +49,6 @@ for record in tqdm(vcf_reader, desc=out_hscan):
     outline = ','.join([str(pos)] + homo_gts)
     outlines.append(outline)
 
+with open(out_hscan, 'a') as outfile:
+    for outline in outlines:
+        outfile.write(outline + '\n')
