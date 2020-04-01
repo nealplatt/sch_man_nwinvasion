@@ -1,6 +1,8 @@
 import msprime
 from tqdm import tqdm                                                                                                                                 
 import os
+#import tskit
+#import allel
 
 #calcualted by watersons_theta.py
 ne = { "new_world"   : 18292,
@@ -34,18 +36,17 @@ for pop in ["new_world", "east_africa", "west_africa"]:
         os.makedirs(out_dir)
 
     #run the equivilant of 100 genomes worth of simulations
-    for i in tqdm(range(0, 343), desc="{} sim".format(pop)):
-        for pop in ["new_world", "east_africa", "west_africa"]:
-            tree_sequence = msprime.simulate( sample_size=n_samples[pop], 
-                                              Ne=ne[pop], 
-                                              length=88.9e6, 
-                                              recombination_rate=3.4e-8,
-                                              mutation_rate=8.1e-9,
-                                              random_seed=12345)
-            tree = tree_sequence.first()
-            print(tree.draw(format="unicode"))
+    for i in tqdm(range(0, 11), desc="{} sim".format(pop)):
+        tree_sequence = msprime.simulate( sample_size=n_samples[pop], 
+                                          Ne=ne[pop], 
+                                          length=88.9e6, 
+                                          recombination_rate=3.4e-8,
+                                          mutation_rate=8.1e-9,
+                                          random_seed=12345)
+        tree = tree_sequence.first()
+        #print(tree.draw(format="unicode"))
 
-            with open("results/sch_man_nwinvasion/msprime/{}/chr1_{}_rep_{}.vcf".format(pop, pop, i), "w") as vcf_file:
-                tree_sequence.write_vcf(vcf_file, ploidy=2)
+        with open("{}/chr1_{}_rep_{}.vcf".format(out_dir, pop, i), "w") as vcf_file:
+             tree_sequence.write_vcf(vcf_file, ploidy=2)
 
 
