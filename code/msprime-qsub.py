@@ -30,7 +30,7 @@ def sim_tree(iteration, pop, length, recomb_rate, mut_rate, seed):
     print("iter {}: {} completed".format(iteration, pop))
     #print(tree.draw(format="unicode"))
 
-    with open("results/sch_man_nwinvasion/msprime/{}/chr1_{}_rep_{}_seed_{}.vcf".format(pop, pop, iteration, seed), "w") as vcf_file:
+    with open("results/msprime/{}/chr1_{}_rep_{}_seed_{}.vcf".format(pop, pop, iteration, seed), "w") as vcf_file:
         tree_sequence.write_vcf(vcf_file, ploidy=2)
 ########################################
 
