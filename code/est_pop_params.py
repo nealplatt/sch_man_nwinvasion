@@ -23,11 +23,12 @@ phased_callset=allel.read_vcf('results/phasing/auto_beagle.vcf')
 #now get an index for each sample/population
 samples = phased_callset["samples"]
 
-i=0 
-for sample in samples:  
+i=0
 pop_idxs = defaultdict(list)   
-     pop_idxs[pop_assign[sample]].append(i) 
-     i=i+1 
+for sample in samples:  
+    print(pop_assign[sample])
+    pop_idxs[pop_assign[sample]].append(i) 
+    i=i+1
 
 pops= list(pop_idxs.keys()) 
 
@@ -98,7 +99,12 @@ for pop in pops:
     pi = pi/accessible_genome_size
     td = td/accessible_genome_size
     theta = theta/accessible_genome_size
-    
     ne = theta/(4 * mu)
 
-    print("{}: {} {} {} {}".format(pop, pi, theta, td, ne))
+#new_world: 0.0006242259807838679 0.0005926896326944684 0.17920916355875174 18292.88989797742
+#east_africa: 0.0013018739117935394 0.0016923886667646374 -0.7913682038936288 52234.218110019676
+#west_africa: 0.0005014590963616828 0.000960492469167024 -1.7377646136352234 29644.82929527852
+#rodhaini: 0.0005310399553706205 0.0004911597410697453 0.29381846808387024 15159.251267584732
+
+
+
