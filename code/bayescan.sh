@@ -1,7 +1,19 @@
 conda activate sch_man_nwinvasion-bayescan
-cd /master/nplatt/sch_man_nwinvasion/results/bayescan
+
+cd /master/nplatt/sch_man_nwinvasion
+
+mkdir results/bayescan
+cd results/bayescan
 
 #get bayescan2.1.0
+#http://cmpg.unibe.ch/software/BayeScan/download.html
+
+# the VCF_to_BAYESCAN spid file is saved in data
+cp ../../VCF_to_BAYESCAN.spid .
+
+#create a pop file
+#<indiv>\t<pop>
+
 
 #get cleaned up vcf file
 vcftools \
@@ -34,7 +46,7 @@ CMD="conda activate sch_man_nwinvasion-bayescan; ~/sch_man_nwinvasion/bin/BayeSc
         -n 100000 \
         -thin 20"
 
-echo $CMD | qsub -V -cwd -S /bin/bash -q all.q -j y -N bayescan -o bayescan.log -pe smp 12
+echo $CMD | qsub -V -cwd -S /bin/bash -q all.q -j y -N BR_EA_bayescan -o BR_EA_bayescan.log -pe smp 12
 
 #-------------------------------------------------------------------------------
 #get cleaned up vcf file
@@ -68,7 +80,7 @@ CMD="conda activate sch_man_nwinvasion-bayescan; ~/sch_man_nwinvasion/bin/BayeSc
         -n 100000 \
         -thin 20"
 
-echo $CMD | qsub -V -cwd -S /bin/bash -q all.q -j y -N bayescan -o bayescan.log -pe smp 12
+echo $CMD | qsub -V -cwd -S /bin/bash -q all.q -j y -N BR_WA_bayescan -o  BR_WA_bayescan.log -pe smp 12
 
 #-------------------------------------------------------------------------------
 #get cleaned up vcf file
@@ -102,5 +114,5 @@ CMD="conda activate sch_man_nwinvasion-bayescan; ~/sch_man_nwinvasion/bin/BayeSc
         -n 100000 \
         -thin 20"
 
-echo $CMD | qsub -V -cwd -S /bin/bash -q all.q -j y -N bayescan -o bayescan.log -pe smp 12
+echo $CMD | qsub -V -cwd -S /bin/bash -q all.q -j y -N EA_WA_bayescan -o EA_WA_bayescan.log -pe smp 12
 
