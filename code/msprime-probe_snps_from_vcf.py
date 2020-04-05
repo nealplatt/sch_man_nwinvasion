@@ -21,14 +21,18 @@ for pop in ["new_world", "east_africa", "west_africa"]:
     sim_vcfs = glob.glob("{}/chr1_*_rep_*.vcf".format(out_dir))
     for sim_vcf in sim_vcfs:
 
-        probed_vcf = sim_vcf.replace(".vcf", "_probed.vcf")       
-        vcf_cmd = "vcftools --vcf {} --bed {} --recode --recode-INFO-all --stdout >{}".format(sim_vcf, bed, probed_vcf)
-        
+        probed_vcf = sim_vcf.replace(".vcf", "_probed.vcf")         
         jid = "probe_{}".format(probed_vcf.split("/")[-1])
         log = "{}/logs".format(out_dir)
+
+        vcf_cmd = "vcftools --vcf {} --bed {} --recode --recode-INFO-all --stdout >{}".format(sim_vcf, bed, probed_vcf)
+        qsub_cmd =  "qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 3 -N {} -o {}".format(jid, log)
+        conda_cmd = "conda activate sch_man_nwinvasion-msprime"
+
+        cmd ="echo \"{}; {}\" | {}".format(conda_cmd, vcf_cmd, qsub_cmd)
+
         #run vcf cmd
-        #process = subprocess.Popen(vcf_cmd.split(""),
+        #process = subprocess.Popen(cmd.split(""),
         #                     stdout=subprocess.PIPE, 
         #                     stderr=subprocess.PIPE)
-        !echo "conda actvate sch_man_nwinvasion-msprime; {vcf_cmd}" | qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 3 -N {jid} -o {log}
-
+        !{cmd}
