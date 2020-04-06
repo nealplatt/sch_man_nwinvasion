@@ -87,7 +87,7 @@ phased_callset['windows']=windows
 #-------------------------------------------------------------------------------
 # fst calculations
 
-pops=["new_world", "east_africa", "new_world"]
+pops=["new_world", "east_africa", "west_africa"]
 
 #make comparisons between population
 for pop in pops:
@@ -146,7 +146,7 @@ for pop in pops:
     df.columns=headers
 
     #save to a csv file
-    csv_file = "./results/genomewide-pi/{}_TEST_PI.csv".format(pop)
+    csv_file = "./results/genomewide-pi/{}_windowed-pi.csv".format(pop)
     df = df.sort_values(["chrom", "pos"], ascending = (True, True))
     df.to_csv(csv_file, index=False, header=True, mode='w')
 
@@ -205,6 +205,6 @@ for pop in pops:
     plt.xticks(ticks, tick_lbls) 
     #plt.axhline(y=np.log10(sidak)*-1, color="black", linestyle=":", linewidth=1)
     plt.title("{}".format(pop))
-    plt.savefig('results/genomewide-pi/{}_smoothed_pi.png'.format(pop), dpi=300) 
+    plt.savefig('results/genomewide-pi/{}_windowed-pi.png'.format(pop), dpi=300) 
     plt.close()
 
