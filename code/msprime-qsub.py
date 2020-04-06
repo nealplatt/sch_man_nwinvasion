@@ -30,9 +30,9 @@ ne = { "new_world"   : 18292,
        "west_africa" : 29644,
        "east_africa" : 52234 }
 
-n_samples = { "new_world"   : 46,
-              "west_africa" : 36,
-              "east_africa" : 56  }
+n_samples = { "new_world"   : 48*2,
+              "west_africa" : 37*2,
+              "east_africa" : 58*2  }
 
 seed = randint(0,1e6)
 sim_tree(iteration, pop, 88e-9, 3.4e-8, 8.1e-9, seed)
