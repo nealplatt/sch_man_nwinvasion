@@ -15,5 +15,5 @@ for POP in new_world east_africa west_africa; do
 done
 
 #now get the vcfs
-python code/probe_snps_from_vcf.py
+python code/msprime-probe_snps_from_vcf.py
 
