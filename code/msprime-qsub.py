@@ -24,15 +24,16 @@ def sim_tree(iteration, pop, length, recomb_rate, mut_rate, seed):
         tree_sequence.write_vcf(vcf_file, ploidy=2)
 ########################################
 
+#calcualted by est_pop_params.py
+ne = { "brazil"      : 18293,
+       "niger"       : 19971,
+       "senegal"     : 22421,
+       "tanzania"    : 52234 }
 
-#calcualted by watersons_theta.py
-ne = { "new_world"   : 18292,
-       "west_africa" : 29644,
-       "east_africa" : 52234 }
-
-n_samples = { "new_world"   : 48*2,
-              "west_africa" : 37*2,
-              "east_africa" : 58*2  }
+n_samples = { "brazil"   : 48*2,
+              "senegal"  : 25*2,
+              "niger"    : 10*2,
+              "tanzania" : 58*2  }
 
 seed = randint(0,1e6)
 sim_tree(iteration, pop, 88e-9, 3.4e-8, 8.1e-9, seed)

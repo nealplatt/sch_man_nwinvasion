@@ -15,7 +15,7 @@ with open('data/renamed-sma_agilent_baits.v7.0.chr_reorderd.bed', 'r') as in_bed
 
 bed = 'results/msprime/sim_probes.bed'
 #now loop through all of the sim vcf files to get snps at probed regions
-for pop in ["new_world", "east_africa", "west_africa"]:
+for pop in ["niger", "senegal", "tanzania", "brazil"]:
     out_dir = "results/msprime/{}".format(pop)
     
     sim_vcfs = glob.glob("{}/chr1_*_rep_*.vcf".format(out_dir))
