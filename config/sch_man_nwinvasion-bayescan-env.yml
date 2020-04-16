@@ -1,0 +1,17 @@
+name: sch_man_nwinvasion-bayescan
+channels:
+  - anaconda
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=conda_forge
+  - _openmp_mutex=4.5=0_gnu
+  - libgcc-ng=9.2.0=h24d8f2e_2
+  - libgomp=9.2.0=h24d8f2e_2
+  - libstdcxx-ng=9.2.0=hdf63c60_2
+  - openjdk=8.0.152=h7b6447c_3
+  - vcftools=0.1.16=he860b03_3
+  - zlib=1.2.11=h516909a_1006
+prefix: /master/nplatt/miniconda3/envs/sch_man_nwinvasion-bayescan
+
