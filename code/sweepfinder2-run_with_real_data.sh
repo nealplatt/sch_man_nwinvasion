@@ -4,8 +4,7 @@ cd /master/nplatt/sch_man_nwinvasion/results/sweepfinder
 
 
 for POP in brazil senegal niger tanzania; do
-for POP in senegal; do
-    #mkdir $POP
+    mkdir $POP
 
     #get the pop specific sfs
     vcftools \
@@ -41,7 +40,7 @@ for POP in senegal; do
         #submit sweepfinder        
         CMD="conda activate sch_man_nwinvasion-sweepfinder; SweepFinder2 -lg 1000 $POP/$CHR"_"$POP.in $POP/$POP.sfs $POP/$CHR"_"$POP.sw2out"
 
-        echo $CMD | qsub -V -cwd -S /bin/bash -q all.q -j y -N sf2_real_$CHR"_"$POP"_"sweep -o $POP/real_$CHR.log -pe smp 2
+        echo $CMD | qsub -V -cwd -S /bin/bash -q all.q -j y -N sf2r"$I"_"$POP" -o $POP/real_$CHR.log -pe smp 2
     done
 done
 

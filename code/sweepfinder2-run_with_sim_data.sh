@@ -31,7 +31,7 @@ for POP in senegal tanzania niger brazil; do
         
         #submit to the queue
         CMD="$CONDA; $SFS_CMD; $SF2_CMD"
-        echo $CMD | $QSUB -N sf2_sim_$SAMPLE_NAME -o logs/sf2_sim_$SAMPLE_NAME.log
+        echo $CMD | $QSUB -N sf2s_$SAMPLE_NAME -o logs/sf2_sim_$SAMPLE_NAME.log
 
     done
 done

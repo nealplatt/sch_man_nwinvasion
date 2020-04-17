@@ -85,7 +85,7 @@ means     <- vector()
 pops      <- vector()
 smootheds <- vector()
 
-for (pop in c("oman", "eafrica", "wafrica", "caribbean", "brazil_x")) {
+for (pop in c("tanzania", "brazil", "senegal", "niger")) {
     
     #read in lt 500kb r2 table from vcftools
     ld_table <- read.table(paste("results/ld/smv7_ex_maf05_", pop, "_ld_dist_lt500kb.tbl", sep=""), 
@@ -110,24 +110,16 @@ r2_df <- data.frame(centers, means, pops, smootheds)
 write.csv(r2_df, file = paste("results/ld/ld_dist_lt500kb_binned_smoothed.csv", sep="") ,row.names=FALSE)
 
 #subset desired populations
-major_groups <- subset(r2_df, pops == "oman"  | 
-                              pops == "eafrica" | 
-                              pops == "wafrica"   |
-                              pops == "caribbean" |
-                              pops == "brazil_x" ) 
+major_groups <- subset(r2_df, pops == "tanzania"  | 
+                              pops == "brazil"    | 
+                              pops == "senegal"   |
+                              pops == "niger"   ) 
 
 
-
-
-
-
-%%R
-
-pop_colors <- c("eafrica"   = "green",
-                "oman"      = "yellow", 
-                "wafrica"   = "red",
-                "brazil_x"  = "purple",
-                "caribbean" = "blue")
+pop_colors <- c("tanzania"   = "green",
+                "brazil"     = "yellow", 
+                "senegal"    = "red",
+                "niger"      = "purple" )
 
 #start plotting
 p <- ggplot(major_groups, aes(x     = centers, 
@@ -182,16 +174,14 @@ p <- p + theme(legend.title         = element_text(size = 14,
                legend.position       = c(0.85, 0.85),
                legend.box.background = element_rect(colour = "black"))
 p <- p + labs(col = "Population")
-p <- p + scale_color_manual(labels = c("Brazil",
-                                       "Caribbean",
-                                       "E. Africa",
-                                       "Oman",
-                                       "W. Africa" ), 
-                            values = c(pop_colors["brazil_x"], 
-                                       pop_colors["caribbean"], 
-                                       pop_colors["eafrica"],
-                                       pop_colors["oman"],
-                                       pop_colors["wafrica"] ))
+p <- p + scale_color_manual(labels = c("Tanzania",
+                                       "Brazil",
+                                       "Senegal",
+                                       "Niger" ), 
+                            values = c(pop_colors["tanzania"], 
+                                       pop_colors["brazil"], 
+                                       pop_colors["senegal"],
+                                       pop_colors["niger"] ))
 
 #save the figure
 svg_img <- "results/ld/ld_decay.svg"
@@ -201,4 +191,4 @@ ggsave(svg_img, plot = p)
 
 
 #display in notebook
-print(p)
+#print(p)
