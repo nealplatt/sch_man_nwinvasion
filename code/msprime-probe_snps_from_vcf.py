@@ -1,5 +1,4 @@
 import msprime
-from tqdm import tqdm
 import os
 import subprocess
 import glob
