@@ -14,6 +14,27 @@ cp ../../VCF_to_BAYESCAN.spid .
 #create a pop file
 #<indiv>\t<pop>
 
+#now modify for each pop bayescan run                                          
+cp pops brazil.pops 
+cp pops tanzania.pops
+cp pops niger.pops
+cp pops senegal.pops
+
+sed -i 's/niger/other/'    brazil.pops  
+sed -i 's/senegal/other/'  brazil.pops  
+sed -i 's/tanzania/other/' brazil.pops  
+
+sed -i 's/niger/other/'    senegal.pops  
+sed -i 's/brazil/other/'   senegal.pops  
+sed -i 's/tanzania/other/' senegal.pops  
+
+sed -i 's/brazil/other/'   niger.pops  
+sed -i 's/senegal/other/'  niger.pops  
+sed -i 's/tanzania/other/' niger.pops  
+
+sed -i 's/niger/other/'   tanzania.pops  
+sed -i 's/senegal/other/' tanzania.pops  
+sed -i 's/brazil/other/'  tanzania.pops  
 
 #get cleaned up vcf file
 vcftools \
