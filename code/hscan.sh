@@ -1,7 +1,7 @@
 conda activate sch_man_nwinvasion-hscan
 
 CONDA="conda activate sch_man_nwinvasion-hscan"
-QSUB="qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 12 "    
+QSUB="qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 1 "    
 
 
 cd ~/sch_man_nwinvasion
