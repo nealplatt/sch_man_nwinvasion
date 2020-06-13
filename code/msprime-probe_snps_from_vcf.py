@@ -1,4 +1,3 @@
-import msprime
 import os
 import subprocess
 import glob
@@ -25,7 +24,7 @@ for pop in ["niger", "senegal", "tanzania", "brazil"]:
         log = "{}/logs".format(out_dir)
 
         vcf_cmd = "vcftools --vcf {} --bed {} --recode --recode-INFO-all --stdout >{}".format(sim_vcf, bed, probed_vcf)
-        qsub_cmd =  "qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 3 -N {} -o {}".format(jid, log)
+        qsub_cmd =  "qsub -V -cwd -S /bin/bash -q all.q -j y -pe smp 2 -N {} -o {}".format(jid, log)
         conda_cmd = "conda activate sch_man_nwinvasion-msprime"
 
         cmd ="echo \"{}; {}\" | {}".format(conda_cmd, vcf_cmd, qsub_cmd)
