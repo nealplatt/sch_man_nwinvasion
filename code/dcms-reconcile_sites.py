@@ -1,9 +1,10 @@
 from collections import defaultdict
 from intervaltree import IntervalTree
-import pandas
+import pandas as pd
 
 for pop in ["senegal", "niger", "brazil", "tanzania"]:
 
+    print(pop)
     #designate files
     hscan_file = "results/hscan/{}/{}_hscan.csv".format(pop, pop)
     sweep_file = "results/sweepfinder/{}/{}_sw2.csv".format(pop, pop)
