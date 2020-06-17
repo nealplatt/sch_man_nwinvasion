@@ -56,7 +56,7 @@ dependencies:
   - jupyter_console=6.1.0=py_0
   - jupyter_core=4.6.1=py38_0
   - kiwisolver=1.1.0=py38hbf85e49_1
-  - ld_impl_linux-64=2.34=h53a641e_0
+  - ld_impl_linux-64=2.33.1=h53a641e_7
   - libblas=3.8.0=16_openblas
   - libcblas=3.8.0=16_openblas
   - libffi=3.2.1=he1b5a44_1007
@@ -92,7 +92,7 @@ dependencies:
   - numpy=1.18.1=py38h94c655d_0
   - numpy-base=1.18.1=py38h2f8d375_1
   - olefile=0.46=py_0
-  - openssl=1.1.1=h7b6447c_0
+  - openssl=1.1.1g=h7b6447c_0
   - packaging=20.1=py_0
   - pandas=1.0.3=py38h0573a6f_0
   - pandoc=2.2.3.2=0
