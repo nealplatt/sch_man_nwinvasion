@@ -38,7 +38,7 @@ for POP in brazil senegal niger tanzania; do
         echo -e 'position\tx\tn\tfolded' | cat - $POP/$CHR"_"$POP.in > temp && mv temp $POP/$CHR"_"$POP.in
 
         #submit sweepfinder        
-        CMD="conda activate sch_man_nwinvasion-sweepfinder; SweepFinder2 -lg 1000 $POP/$CHR"_"$POP.in $POP/$POP.sfs $POP/$CHR"_"$POP.sw2out"
+        CMD="conda activate sch_man_nwinvasion-sweepfinder; SweepFinder2 -lg 1000 $POP/$CHR"_"$POP.in $POP/$POP.sfs $POP/$CHR"_"$POP.sf2out"
 
         echo $CMD | qsub -V -cwd -S /bin/bash -q all.q -j y -N sf2r"$I"_"$POP" -o $POP/real_$CHR.log -pe smp 2
     done

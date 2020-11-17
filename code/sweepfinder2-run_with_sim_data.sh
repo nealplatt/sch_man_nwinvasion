@@ -27,7 +27,7 @@ for POP in senegal tanzania niger brazil; do
         SFS_CMD="SweepFinder2 -f $POP-sim/$SAMPLE_NAME.in $POP-sim/$SAMPLE_NAME.sfs >logs/"$SAMPLE_NAME"_sfs.log"
 
         #gen sweepfinder2
-        SF2_CMD="SweepFinder2 -lg 1000 $POP-sim/$SAMPLE_NAME.in $POP-sim/$SAMPLE_NAME.sfs $POP-sim/$SAMPLE_NAME.sw2out"
+        SF2_CMD="SweepFinder2 -lg 1000 $POP-sim/$SAMPLE_NAME.in $POP-sim/$SAMPLE_NAME.sfs $POP-sim/$SAMPLE_NAME.sf2out"
         
         #submit to the queue
         CMD="$CONDA; $SFS_CMD; $SF2_CMD"
