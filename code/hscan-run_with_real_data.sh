@@ -41,42 +41,4 @@ for POP in brazil tanzania senegal niger; do
 done
 
 
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#     NOW RUN MSPRIME.SH TO GET NEUTRAL
-#
-#    these values are used to validate H
-#    are scores comporable to actual data
-#
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-#now convert all vcfs to hscan fmt
-for POP in brazil tanzania senegal niger; do
-
-    mkdir results/hscan/$POP"-msprime"
-
-    for VCF in $(ls results/msprime/$POP/*probed.vcf); do
-        BASE=$(basename $VCF)
-        OUT=results/hscan/$POP"-msprime"/$(basename $VCF).hscan-in
-        VCF2HSCAN_CMD="python code/vcf2hscan.py $VCF $OUT"
-        
-        echo "$CONDA; $VCF2HSCAN_CMD" | $QSUB -N hscan2vcf_$BASE -o results/hscan/logs/"$BASE"_convert.log
-    
-    done
-done
-
-#batch submit hscan
-for POP in brazil tanzania senegal niger; do
-
-    for IN in $(ls results/hscan/$POP"-msprime"/*.hscan-in); do
-        BASE=$(basename $IN .hscan-in)
-        OUT=results/hscan/"$POP"-msprime/"$BASE".hscan-out
-        
-        HSCAN_CMD="bin/H-scan -i $IN -g 10000 >$OUT"
-        
-        echo "$CONDA; $HSCAN_CMD" | $QSUB -N hscan_$BASE -o results/hscan/logs/"$BASE"_hscan.log
-
-    done
-done
-
 
