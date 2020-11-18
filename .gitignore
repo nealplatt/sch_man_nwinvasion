@@ -8,3 +8,4 @@ data/sra/
 sandbox/
 logs/*
 code/*~
+results/
