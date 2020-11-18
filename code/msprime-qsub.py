@@ -25,10 +25,10 @@ def sim_tree(iteration, pop, length, recomb_rate, mut_rate, seed):
 ########################################
 
 #calcualted by est_pop_params.py
-ne = { "brazil"      : 18293,
-       "niger"       : 19971,
-       "senegal"     : 22421,
-       "tanzania"    : 52234 }
+ne = { "brazil"      : 18032,
+       "niger"       : 18736,
+       "senegal"     : 21992,
+       "tanzania"    : 51508 }
 
 n_samples = { "brazil"   : 48*2,
               "senegal"  : 25*2,
