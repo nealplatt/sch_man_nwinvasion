@@ -10,6 +10,7 @@ dependencies:
   - attrs=20.2.0=py_0
   - backcall=0.2.0=py_0
   - bcolz=1.2.1=py38hb3f55d8_1001
+  - biopython=1.78=py38h25fe258_1
   - bleach=3.2.1=py_0
   - blosc=1.20.1=he1b5a44_0
   - bokeh=2.2.1=py38h32f6830_0
@@ -72,6 +73,7 @@ dependencies:
   - libblas=3.8.0=17_openblas
   - libcblas=3.8.0=17_openblas
   - libcurl=7.71.1=hcdd3856_8
+  - libdeflate=1.6=h516909a_0
   - libedit=3.1.20191231=h14c3975_1
   - libev=4.33=h516909a_1
   - libffi=3.3=he6710b0_2
@@ -134,11 +136,13 @@ dependencies:
   - pyparsing=2.4.7=py_0
   - pyqt=5.9.2=py38h05f1152_4
   - pyrsistent=0.17.3=py38h7b6447c_0
+  - pysam=0.16.0.1=py38hbdc2ae9_1
   - pytables=3.6.1=py38h1b207d3_2
   - python=3.8.5=h7579374_1
   - python-dateutil=2.8.1=py_0
   - python_abi=3.8=1_cp38
   - pytz=2020.1=pyh9f0ad1d_0
+  - pyvcf=0.6.8=py38h32f6830_1002
   - pyyaml=5.3.1=py38h1e0a361_0
   - pyzmq=19.0.2=py38he6710b0_1
   - qt=5.9.7=h5867ecd_1
