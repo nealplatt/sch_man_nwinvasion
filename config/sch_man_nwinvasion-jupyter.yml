@@ -7,6 +7,8 @@ channels:
   - defaults
 dependencies:
   - _r-mutex=1.0.1=anacondar_1
+  - argcomplete=1.12.2=pyhd8ed1ab_0
+  - argh=0.26.2=pyh9f0ad1d_1002
   - argon2-cffi=20.1.0=py38h7b6447c_1
   - asciitree=0.3.3=py_2
   - attrs=20.2.0=py_0
@@ -47,6 +49,7 @@ dependencies:
   - gcc_impl_linux-64=7.3.0=habb00fd_1
   - gcc_linux-64=7.3.0=h553295d_9
   - gettext=0.19.8.1=h5e8e0c9_1
+  - gffutils=0.10.1=pyh864c0ab_1
   - gfortran_impl_linux-64=7.3.0=hdf63c60_1
   - gfortran_linux-64=7.3.0=h553295d_9
   - git=2.29.2=pl5320h78be0e9_1
@@ -157,6 +160,7 @@ dependencies:
   - ptyprocess=0.6.0=py38_0
   - pybedtools=0.8.1=py38h1c8e9b9_2
   - pycparser=2.20=py_2
+  - pyfaidx=0.5.9.1=pyh864c0ab_1
   - pygments=2.7.1=py_0
   - pyparsing=2.4.7=py_0
   - pyqt=5.9.2=py38h05f1152_4
@@ -188,6 +192,7 @@ dependencies:
   - send2trash=1.5.0=py38_0
   - setuptools=49.6.0=py38_0
   - simplegeneric=0.8.1=py_1
+  - simplejson=3.17.2=py38h1e0a361_1
   - sip=4.19.24=py38he6710b0_0
   - six=1.15.0=py_0
   - sortedcontainers=2.2.2=pyh9f0ad1d_0
