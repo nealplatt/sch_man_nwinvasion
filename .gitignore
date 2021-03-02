@@ -9,3 +9,7 @@ sandbox/
 logs/*
 code/*~
 results/
+scatch/
+code/VCF2Dis
+code/pySankey
+scratch/
