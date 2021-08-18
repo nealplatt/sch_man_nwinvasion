@@ -1,178 +1,149 @@
-name: null
-channels:
-  - conda-forge
-  - bioconda
-  - defaults
-dependencies:
-  - _libgcc_mutex=0.1=conda_forge
-  - _openmp_mutex=4.5=1_gnu
-  - alsa-lib=1.2.3=h516909a_0
-  - asciitree=0.3.3=py_2
-  - backcall=0.2.0=pyh9f0ad1d_0
-  - backports=1.0=py_2
-  - backports.functools_lru_cache=1.6.4=pyhd8ed1ab_0
-  - bedtools=2.30.0=h7d7f7ad_1
-  - bokeh=2.3.3=py39hf3d152e_0
-  - bzip2=1.0.8=h7f98852_4
-  - c-ares=1.17.1=h7f98852_1
-  - ca-certificates=2021.5.30=ha878542_0
-  - cached-property=1.5.2=hd8ed1ab_1
-  - cached_property=1.5.2=pyha770c72_1
-  - certifi=2021.5.30=py39hf3d152e_0
-  - click=8.0.1=py39hf3d152e_0
-  - cloudpickle=1.6.0=py_0
-  - cycler=0.10.0=py_2
-  - cytoolz=0.11.0=py39h3811e60_3
-  - dask=2021.7.0=pyhd8ed1ab_0
-  - dask-core=2021.7.0=pyhd8ed1ab_0
-  - dbus=1.13.6=h48d8840_2
-  - debugpy=1.4.0=py39he80948d_0
-  - decorator=5.0.9=pyhd8ed1ab_0
-  - distributed=2021.7.0=py39hf3d152e_0
-  - expat=2.4.1=h9c3ff4c_0
-  - fasteners=0.16=pyhd8ed1ab_0
-  - fontconfig=2.13.1=hba837de_1005
-  - freetype=2.10.4=h0708190_1
-  - fsspec=2021.7.0=pyhd8ed1ab_0
-  - gettext=0.19.8.1=h0b5b191_1005
-  - glib=2.68.3=h9c3ff4c_0
-  - glib-tools=2.68.3=h9c3ff4c_0
-  - gst-plugins-base=1.18.4=hf529b03_2
-  - gstreamer=1.18.4=h76c114f_2
-  - h5py=3.3.0=nompi_py39h98ba4bc_100
-  - hdf5=1.10.6=nompi_h6a2412b_1114
-  - heapdict=1.0.1=py_0
-  - htslib=1.13=h9093b5e_0
-  - icu=68.1=h58526e2_0
-  - intervaltree=3.0.2=py_0
-  - ipykernel=6.0.3=py39hef51801_0
-  - ipython=7.25.0=py39hef51801_1
-  - ipython_genutils=0.2.0=py_1
-  - jbig=2.1=h7f98852_2003
-  - jedi=0.18.0=py39hf3d152e_2
-  - jinja2=3.0.1=pyhd8ed1ab_0
-  - joblib=1.0.1=pyhd8ed1ab_0
-  - jpeg=9d=h36c2ea0_0
-  - jupyter_client=6.1.12=pyhd8ed1ab_0
-  - jupyter_core=4.7.1=py39hf3d152e_0
-  - kiwisolver=1.3.1=py39h1a9c180_1
-  - krb5=1.19.1=hcc1bbae_0
-  - lcms2=2.12=hddcbb42_0
-  - ld_impl_linux-64=2.36.1=hea4e1c9_1
-  - lerc=2.2.1=h9c3ff4c_0
-  - libblas=3.9.0=9_openblas
-  - libcblas=3.9.0=9_openblas
-  - libclang=11.1.0=default_ha53f305_1
-  - libcurl=7.77.0=h2574ce0_0
-  - libdeflate=1.7=h7f98852_5
-  - libedit=3.1.20191231=he28a2e2_2
-  - libev=4.33=h516909a_1
-  - libevent=2.1.10=hcdb4288_3
-  - libffi=3.3=h58526e2_2
-  - libgcc-ng=9.3.0=h2828fa1_19
-  - libgfortran-ng=9.3.0=hff62375_19
-  - libgfortran5=9.3.0=hff62375_19
-  - libglib=2.68.3=h3e27bee_0
-  - libgomp=9.3.0=h2828fa1_19
-  - libiconv=1.16=h516909a_0
-  - liblapack=3.9.0=9_openblas
-  - libllvm11=11.1.0=hf817b99_2
-  - libnghttp2=1.43.0=h812cca2_0
-  - libogg=1.3.4=h7f98852_1
-  - libopenblas=0.3.15=pthreads_h8fe5266_1
-  - libopus=1.3.1=h7f98852_1
-  - libpng=1.6.37=h21135ba_2
-  - libpq=13.3=hd57d9b9_0
-  - libsodium=1.0.18=h36c2ea0_1
-  - libssh2=1.9.0=ha56f1ee_6
-  - libstdcxx-ng=9.3.0=h6de172a_19
-  - libtiff=4.3.0=hf544144_1
-  - libuuid=2.32.1=h7f98852_1000
-  - libvorbis=1.3.7=h9c3ff4c_0
-  - libwebp-base=1.2.0=h7f98852_2
-  - libxcb=1.13=h7f98852_1003
-  - libxkbcommon=1.0.3=he3ba5ed_0
-  - libxml2=2.9.12=h72842e0_0
-  - locket=0.2.0=py_2
-  - lz4-c=1.9.3=h9c3ff4c_0
-  - markupsafe=2.0.1=py39h3811e60_0
-  - matplotlib=3.4.2=py39hf3d152e_0
-  - matplotlib-base=3.4.2=py39h2fa2bec_0
-  - matplotlib-inline=0.1.2=pyhd8ed1ab_2
-  - monotonic=1.5=py_0
-  - msgpack-python=1.0.2=py39h1a9c180_1
-  - mysql-common=8.0.25=ha770c72_2
-  - mysql-libs=8.0.25=hfa10184_2
-  - ncurses=6.2=h58526e2_4
-  - networkx=2.3=py_0
-  - nspr=4.30=h9c3ff4c_0
-  - nss=3.67=hb5efdd6_0
-  - numcodecs=0.8.0=py39he80948d_0
-  - numexpr=2.7.3=py39hde0f152_0
-  - numpy=1.21.1=py39hdbf815f_0
-  - olefile=0.46=pyh9f0ad1d_1
-  - openjpeg=2.4.0=hb52868f_1
-  - openssl=1.1.1k=h7f98852_0
-  - packaging=21.0=pyhd8ed1ab_0
-  - pandas=1.3.0=py39hde0f152_0
-  - parso=0.8.2=pyhd8ed1ab_0
-  - partd=1.2.0=pyhd8ed1ab_0
-  - patsy=0.5.1=py_0
-  - pcre=8.45=h9c3ff4c_0
-  - pexpect=4.8.0=pyh9f0ad1d_2
-  - pickleshare=0.7.5=py_1003
-  - pillow=8.3.1=py39ha612740_0
-  - pip=21.1.3=pyhd8ed1ab_0
-  - pomegranate=0.13.3=py39h081fc7a_1
-  - prompt-toolkit=3.0.19=pyha770c72_0
-  - psutil=5.8.0=py39h3811e60_1
-  - pthread-stubs=0.4=h36c2ea0_1001
-  - ptyprocess=0.7.0=pyhd3deb0d_0
-  - pybedtools=0.8.2=py39h39abbe0_1
-  - pygments=2.9.0=pyhd8ed1ab_0
-  - pyparsing=2.4.7=pyh9f0ad1d_0
-  - pyqt=5.12.3=py39hf3d152e_7
-  - pyqt-impl=5.12.3=py39h0fcd23e_7
-  - pyqt5-sip=4.19.18=py39he80948d_7
-  - pyqtchart=5.12=py39h0fcd23e_7
-  - pyqtwebengine=5.12.1=py39h0fcd23e_7
-  - pysam=0.16.0.1=py39h051187c_3
-  - python=3.9.6=h49503c6_1_cpython
-  - python-dateutil=2.8.2=pyhd8ed1ab_0
-  - python_abi=3.9=2_cp39
-  - pytz=2021.1=pyhd8ed1ab_0
-  - pyyaml=5.4.1=py39h3811e60_0
-  - pyzmq=22.1.0=py39h37b5a0c_0
-  - qt=5.12.9=hda022c4_4
-  - readline=8.1=h46c0cb4_0
-  - scikit-allel=1.3.5=py39hde0f152_0
-  - scikit-learn=0.24.2=py39h4dfa638_0
-  - scipy=1.7.0=py39hee8e79c_1
-  - seaborn=0.11.1=hd8ed1ab_1
-  - seaborn-base=0.11.1=pyhd8ed1ab_1
-  - setuptools=49.6.0=py39hf3d152e_3
-  - six=1.16.0=pyh6c4a22f_0
-  - sortedcontainers=2.4.0=pyhd8ed1ab_0
-  - sqlite=3.36.0=h9cd32fc_0
-  - statsmodels=0.12.2=py39hce5d2b2_0
-  - tblib=1.7.0=pyhd8ed1ab_0
-  - threadpoolctl=2.2.0=pyh8a188c0_0
-  - tk=8.6.10=h21135ba_1
-  - toolz=0.11.1=py_0
-  - tornado=6.1=py39h3811e60_1
-  - tqdm=4.61.2=pyhd8ed1ab_1
-  - traitlets=5.0.5=py_0
-  - typing_extensions=3.10.0.0=pyha770c72_0
-  - tzdata=2021a=he74cb21_1
-  - wcwidth=0.2.5=pyh9f0ad1d_2
-  - wheel=0.36.2=pyhd3deb0d_0
-  - xorg-libxau=1.0.9=h7f98852_0
-  - xorg-libxdmcp=1.1.3=h7f98852_0
-  - xz=5.2.5=h516909a_1
-  - yaml=0.2.5=h516909a_0
-  - zarr=2.8.3=pyhd8ed1ab_0
-  - zeromq=4.3.4=h9c3ff4c_0
-  - zict=2.0.0=py_0
-  - zlib=1.2.11=h516909a_1010
-  - zstd=1.5.0=ha95c52a_0
-prefix: /master/nplatt/sch_man_nwinvasion/envs/sch_man_nwinvasion-selection
+# conda environments:
+#
+base                     /master/nplatt/miniconda3
+SARS-CoV-2_lsm_rescue     /master/nplatt/miniconda3/envs/SARS-CoV-2_lsm_rescue
+SARS-CoV-2_lsm_rescue-lofreq     /master/nplatt/miniconda3/envs/SARS-CoV-2_lsm_rescue-lofreq
+SARS-CoV-2_lsm_rescue-python     /master/nplatt/miniconda3/envs/SARS-CoV-2_lsm_rescue-python
+SUDV_TXBIO2019-002-bowtie2     /master/nplatt/miniconda3/envs/SUDV_TXBIO2019-002-bowtie2
+SUDV_TXBIO2019-002-kraken2     /master/nplatt/miniconda3/envs/SUDV_TXBIO2019-002-kraken2
+SUDV_TXBIO2019-002-lofreq     /master/nplatt/miniconda3/envs/SUDV_TXBIO2019-002-lofreq
+SUDV_TXBIO2019-002-main     /master/nplatt/miniconda3/envs/SUDV_TXBIO2019-002-main
+SUDV_TXBIO2019-002-mosdepth     /master/nplatt/miniconda3/envs/SUDV_TXBIO2019-002-mosdepth
+SUDV_TXBIO2019-002-qc     /master/nplatt/miniconda3/envs/SUDV_TXBIO2019-002-qc
+SUDV_TXBIO2019-002-samtools     /master/nplatt/miniconda3/envs/SUDV_TXBIO2019-002-samtools
+SUDV_TXBIO2019-002-snpeff     /master/nplatt/miniconda3/envs/SUDV_TXBIO2019-002-snpeff
+admixture                /master/nplatt/miniconda3/envs/admixture
+analyze_virus            /master/nplatt/miniconda3/envs/analyze_virus
+bcftools                 /master/nplatt/miniconda3/envs/bcftools
+bedops                   /master/nplatt/miniconda3/envs/bedops
+bedtools                 /master/nplatt/miniconda3/envs/bedtools
+blast                    /master/nplatt/miniconda3/envs/blast
+bowtie                   /master/nplatt/miniconda3/envs/bowtie
+bowtie2                  /master/nplatt/miniconda3/envs/bowtie2
+bwa                      /master/nplatt/miniconda3/envs/bwa
+covid                    /master/nplatt/miniconda3/envs/covid
+covid-lofreq             /master/nplatt/miniconda3/envs/covid-lofreq
+ebola_deltaf             /master/nplatt/miniconda3/envs/ebola_deltaf
+ebola_lofreq             /master/nplatt/miniconda3/envs/ebola_lofreq
+ebola_main               /master/nplatt/miniconda3/envs/ebola_main
+ebola_samtools           /master/nplatt/miniconda3/envs/ebola_samtools
+ebola_snpeff             /master/nplatt/miniconda3/envs/ebola_snpeff
+entrez                   /master/nplatt/miniconda3/envs/entrez
+entropy                  /master/nplatt/miniconda3/envs/entropy
+fastqc                   /master/nplatt/miniconda3/envs/fastqc
+filter_genotypes         /master/nplatt/miniconda3/envs/filter_genotypes
+fst                      /master/nplatt/miniconda3/envs/fst
+genome_stats             /master/nplatt/miniconda3/envs/genome_stats
+globus                   /master/nplatt/miniconda3/envs/globus
+illumiprocessor          /master/nplatt/miniconda3/envs/illumiprocessor
+ipython                  /master/nplatt/miniconda3/envs/ipython
+java                     /master/nplatt/miniconda3/envs/java
+jupyterlab               /master/nplatt/miniconda3/envs/jupyterlab
+kraken2                  /master/nplatt/miniconda3/envs/kraken2
+lofreq                   /master/nplatt/miniconda3/envs/lofreq
+mafft                    /master/nplatt/miniconda3/envs/mafft
+main                     /master/nplatt/miniconda3/envs/main
+mantel                   /master/nplatt/miniconda3/envs/mantel
+mosdepth                 /master/nplatt/miniconda3/envs/mosdepth
+muscle                   /master/nplatt/miniconda3/envs/muscle
+nanopolish               /master/nplatt/miniconda3/envs/nanopolish
+novoplasty               /master/nplatt/miniconda3/envs/novoplasty
+nuc_phylo                /master/nplatt/miniconda3/envs/nuc_phylo
+patho_detect             /master/nplatt/miniconda3/envs/patho_detect
+patho_detect-assemble     /master/nplatt/miniconda3/envs/patho_detect-assemble
+patho_detect-jupyter     /master/nplatt/miniconda3/envs/patho_detect-jupyter
+patho_detect-mito        /master/nplatt/miniconda3/envs/patho_detect-mito
+patho_detect-phylo       /master/nplatt/miniconda3/envs/patho_detect-phylo
+pathogen_jupyter         /master/nplatt/miniconda3/envs/pathogen_jupyter
+pca                      /master/nplatt/miniconda3/envs/pca
+pcadmix                  /master/nplatt/miniconda3/envs/pcadmix
+phasing                  /master/nplatt/miniconda3/envs/phasing
+phyluce                  /master/nplatt/miniconda3/envs/phyluce
+plink                    /master/nplatt/miniconda3/envs/plink
+ray                      /master/nplatt/miniconda3/envs/ray
+rclone                   /master/nplatt/miniconda3/envs/rclone
+samtools                 /master/nplatt/miniconda3/envs/samtools
+sankey                   /master/nplatt/miniconda3/envs/sankey
+sars-cov-2_jupyter       /master/nplatt/miniconda3/envs/sars-cov-2_jupyter
+sars-cov-2_main          /master/nplatt/miniconda3/envs/sars-cov-2_main
+sch_hae_africa           /master/nplatt/miniconda3/envs/sch_hae_africa
+sch_hae_africa-filter_and_map_reads     /master/nplatt/miniconda3/envs/sch_hae_africa-filter_and_map_reads
+sch_hae_africa-mosdepth     /master/nplatt/miniconda3/envs/sch_hae_africa-mosdepth
+sch_hae_hybrid-jupyter     /master/nplatt/miniconda3/envs/sch_hae_hybrid-jupyter
+sch_hae_hybrid-nuc_phylo     /master/nplatt/miniconda3/envs/sch_hae_hybrid-nuc_phylo
+sch_hae_nigeria          /master/nplatt/miniconda3/envs/sch_hae_nigeria
+sch_hae_nigeria-filter_and_map_reads     /master/nplatt/miniconda3/envs/sch_hae_nigeria-filter_and_map_reads
+sch_hae_nigeria-filter_genotypes     /master/nplatt/miniconda3/envs/sch_hae_nigeria-filter_genotypes
+sch_man_nwinvasion-bayescan     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-bayescan
+sch_man_nwinvasion-dcms     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-dcms
+sch_man_nwinvasion-fst     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-fst
+sch_man_nwinvasion-hscan     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-hscan
+sch_man_nwinvasion-jupyter     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-jupyter
+sch_man_nwinvasion-loter     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-loter
+sch_man_nwinvasion-msprime     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-msprime
+sch_man_nwinvasion-phylonet     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-phylonet
+sch_man_nwinvasion-postproc     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-postproc
+sch_man_nwinvasion-rfmix     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-rfmix
+sch_man_nwinvasion-sweepfinder     /master/nplatt/miniconda3/envs/sch_man_nwinvasion-sweepfinder
+seaborn2                 /master/nplatt/miniconda3/envs/seaborn2
+snpeff                   /master/nplatt/miniconda3/envs/snpeff
+sra                      /master/nplatt/miniconda3/envs/sra
+stacks                   /master/nplatt/miniconda3/envs/stacks
+tmp                      /master/nplatt/miniconda3/envs/tmp
+trimmomatic              /master/nplatt/miniconda3/envs/trimmomatic
+vcftools                 /master/nplatt/miniconda3/envs/vcftools
+viral_processing         /master/nplatt/miniconda3/envs/viral_processing
+virus_jupyter            /master/nplatt/miniconda3/envs/virus_jupyter
+                         /master/nplatt/mito_dna/env/novoplasty
+                         /master/nplatt/mito_dna/env/spades
+                         /master/nplatt/sch_hae_nigeria/.snakemake/conda/0ebc7bcec6f55dea9aee730192ff22fc
+                         /master/nplatt/sch_hae_nigeria/.snakemake/conda/2a878c51a566451afa3050ebcb4faa66
+                         /master/nplatt/sch_hae_nigeria/.snakemake/conda/2d2529b10a48702e70733907b95923ef
+                         /master/nplatt/sch_hae_nigeria/.snakemake/conda/2e546520df81b4c28f5b682b7385435d
+                         /master/nplatt/sch_hae_nigeria/.snakemake/conda/4404327f94dd50a5137ddda2d2b762f4
+                         /master/nplatt/sch_hae_nigeria/.snakemake/conda/46e95da3658d7fc8b9e68ba65fe23716
+                         /master/nplatt/sch_hae_nigeria/.snakemake/conda/75fa3ea28cd309917823ae8a8e417226
+                         /master/nplatt/sch_hae_nigeria/.snakemake/conda/7f666cf261614198f3d86a244d9ec7f1
+                         /master/nplatt/sch_hae_nigeria/.snakemake/conda/a39f767539c4946fb2fa78bb5736e3d8
+                         /master/nplatt/sch_hae_nigeria/envs/bwa
+                         /master/nplatt/sch_hae_nigeria/envs/fastqc
+                         /master/nplatt/sch_hae_nigeria/envs/gatk
+                         /master/nplatt/sch_hae_nigeria/envs/get_and_process_sh_genome
+                         /master/nplatt/sch_hae_nigeria/envs/jupyterlab_postproc
+                         /master/nplatt/sch_hae_nigeria/envs/mosdepth
+                         /master/nplatt/sch_hae_nigeria/envs/plink
+                         /master/nplatt/sch_hae_nigeria/envs/samtools
+                         /master/nplatt/sch_hae_nigeria/envs/snake
+                         /master/nplatt/sch_hae_nigeria/envs/sra-tools
+                         /master/nplatt/sch_hae_nigeria/envs/trimmomatic
+                         /master/nplatt/sch_hae_nigeria/envs/vcftools
+                         /master/nplatt/sch_hae_scan/.snakemake/conda/09477112cfc26bb90d50ed16e915a86a
+                         /master/nplatt/sch_hae_scan/.snakemake/conda/16ea292c48e7b82c234fe40a49136ccb
+                         /master/nplatt/sch_hae_scan/.snakemake/conda/794c6b29a84b49650314a698ae586fe9
+                         /master/nplatt/sch_hae_scan/.snakemake/conda/9ebcdd0343185f56645fec42158a2c80
+                         /master/nplatt/sch_hae_scan/.snakemake/conda/b9cf478e48021d3e3fbf619228de5e79
+                         /master/nplatt/sch_hae_scan/.snakemake/conda/edf348699db77de7931f488ee3425b86
+                         /master/nplatt/sch_hae_scan/.snakemake/conda/eeef12cfe927f08763de5c760d3542df
+                         /master/nplatt/sch_hae_scan/envs/admixture
+                         /master/nplatt/sch_hae_scan/envs/art
+                         /master/nplatt/sch_hae_scan/envs/basic
+                         /master/nplatt/sch_hae_scan/envs/bcftools
+                         /master/nplatt/sch_hae_scan/envs/beagle
+                         /master/nplatt/sch_hae_scan/envs/bedtools
+                         /master/nplatt/sch_hae_scan/envs/jellyfish
+                         /master/nplatt/sch_hae_scan/envs/jupyterlab_ancestry
+                         /master/nplatt/sch_hae_scan/envs/jupyterlab_popstructure
+                         /master/nplatt/sch_hae_scan/envs/jupyterlab_postproc
+                         /master/nplatt/sch_hae_scan/envs/jupyterlab_selection
+                         /master/nplatt/sch_hae_scan/envs/novoplasty
+                         /master/nplatt/sch_hae_scan/envs/plink
+                         /master/nplatt/sch_hae_scan/envs/vcftools
+                         /master/nplatt/sch_man_nwinvasion/envs/sch_man_nwinvasion-gatk
+                         /master/nplatt/sch_man_nwinvasion/envs/sch_man_nwinvasion-jupyter
+                         /master/nplatt/sch_man_nwinvasion/envs/sch_man_nwinvasion-ld
+                         /master/nplatt/sch_man_nwinvasion/envs/sch_man_nwinvasion-mito_diveristy
+                         /master/nplatt/sch_man_nwinvasion/envs/sch_man_nwinvasion-outflank
+                         /master/nplatt/sch_man_nwinvasion/envs/sch_man_nwinvasion-pithetafst
+                      *  /master/nplatt/sch_man_nwinvasion/envs/sch_man_nwinvasion-selection
+                         /master/nplatt/sge_tutorial/env/sge_tutorial
+
