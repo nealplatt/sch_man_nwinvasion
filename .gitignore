@@ -20,4 +20,10 @@ envs/sch_man_nwinvasion-pithetafst/
 envs/sch_man_nwinvasion-selection/
 envs/sch_man_nwinvasion-gatk/                                                                                                                                                                                                                
 envs/sch_man_nwinvasion-mito_diveristy/
-notebooks/unused
+sch_man_nwinvasion-admixture/                                                                                                                                                                                                                
+sch_man_nwinvasion-geo_map/                                                                                                                                                                                                                  
+sch_man_nwinvasion-mantel/                                                                                                                                                                                                                   
+sch_man_nwinvasion-pcadapt/                                                                                                                                                                                                                  
+sch_man_nwinvasion-phylogenetics/                                                                                                                                                                                                            
+sch_man_nwinvasion-read_summary/                                                                                                                                                                                                             
+sch_man_nwinvasion-tast_sankey/ 
