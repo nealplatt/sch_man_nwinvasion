@@ -1,6 +1,6 @@
 # Genomic analysis of a parasite invasion: colonization of the New World by the blood fluke, *Schistosoma mansoni* 
 
-Roy Nelson Platt II*<sup>1</sup>, Frédéric D. Chevalier*<sup>1</sup>, Winka Le Clec'h<sup>1>/sup>, Marina McDew-White<sup>1</sup>, Philip T. LoVerde<sup>2</sup>, Rafael Ramiro de Assis<sup>3</sup>, Guilherme 
+Roy Nelson Platt II*<sup>1</sup>, Frédéric D. Chevalier*<sup>1</sup>, Winka Le Clec'h<sup>1</sup>, Marina McDew-White<sup>1</sup>, Philip T. LoVerde<sup>2</sup>, Rafael Ramiro de Assis<sup>3</sup>, Guilherme 
 Oliveira<sup>3</sup>, Safari Kinunghi<sup>4</sup>, Anouk Gouvras<sup>5</sup>, Bonnie Webster<sup>5</sup>, Joanne Webster<sup>6</sup>, Aidan Emery<sup>5</sup>, David Rollinson<sup>5</sup>, Timothy J. Anderson<sup>1</sup>
 
 <sup>1</sup>Texas Biomedical Research Institute, San Antonio, San Antonio, TX, United States
