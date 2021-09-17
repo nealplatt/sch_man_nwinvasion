@@ -1,0 +1,6 @@
+name: sch_man_nwinvasion-gatk
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+prefix: /master/nplatt/miniconda3/envs/sch_man_nwinvasion-gatk
