@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/201331948.svg)](https://zenodo.org/badge/latestdoi/201331948)
+
+
 # Genomic analysis of a parasite invasion: colonization of the Americas by the blood fluke, *Schistosoma mansoni* 
 
 Roy N. Platt II*<sup>1</sup>, Winka Le Clec'h*<sup>1</sup>, Frédéric D. Chevalier*<sup>1</sup>, Marina McDew-White<sup>1</sup>, Philip T. LoVerde<sup>2</sup>, Rafael R. de Assis<sup>3</sup>, Guilherme Oliveira<sup>3,4</sup>, Safari Kinunghi<sup>5</sup>, Amadou Garba Djirmay<sup>6</sup>, Michelle L. Steinauer<sup>7</sup>, Anouk Gouvras<sup>8</sup>, Muriel Rabone<sup>8</sup>, Fiona Allan<sup>9,10</sup>, Bonnie L. Webster<sup>8,10</sup>, Joanne P. Webster<sup>9</sup>, Aidan Emery<sup>8,10</sup>, David Rollinson<sup>8,10</sup>, Timothy J. C. Anderson<sup>1</sup>
